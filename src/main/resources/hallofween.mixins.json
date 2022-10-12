@@ -1,0 +1,16 @@
+{
+  "required": true,
+  "minVersion": "0.8",
+  "package": "mods.hallofween.mixin",
+  "plugin": "mods.hallofween.mixin.plugins.HallOfWeenMixinPlugin",
+  "compatibilityLevel": "JAVA_8",
+  "mixins": [
+    "LivingEntityMixin"
+  ],
+  "client": [
+    "EntitySpawnSyncMixin"
+  ],
+  "injectors": {
+    "defaultRequire": 1
+  }
+}

@@ -1,0 +1,62 @@
+{
+  "text.testificate.tooltip0": "The evil mobs have turned this Testificate into an item!",
+  "text.testificate.tooltip1": "Put it on a block to release it from this predicament.",
+
+  "text.testificate.plea0": "Get me out of here!",
+  "text.testificate.plea1": "Let me go!",
+  "text.testificate.plea2": "We didn't do anything wrong!",
+  "text.testificate.plea3": "I'm so glad you're here! Please let me out.",
+  "text.testificate.plea4": "Hey! Help! Help!",
+  "text.testificate.plea5": "Over here! I'm in here!",
+  "text.testificate.plea6": "Help! Let me out!",
+  "text.testificate.plea7": "Please, help me. I'm so weak.",
+  "text.testificate.plea8": "Let me out of this prison. Please.",
+
+  "text.testificate.freed0": "I didn't think we'd make it out.",
+  "text.testificate.freed1": "Thank you... Thank you.",
+  "text.testificate.freed2": "Everything...hurts.",
+  "text.testificate.freed3": "Village guards that shorthanded, eh?",
+  "text.testificate.freed4": "Thanks, those undead mongrels are getting more aggressive by the hour.",
+  "text.testificate.freed5": "I've never experienced anything so frightening and exhilarating.",
+  "text.testificate.freed6": "That was awful. Let's not do that again.",
+  "text.testificate.freed7": "I have no words. I'm so grateful. Thank you!",
+  "text.testificate.freed8": "Thank you. Truly.",
+  "text.testificate.freed9": "Thank you for your help.",
+
+  "text.hallofween.xp": "+%d XP when eaten.",
+  "text.hallofween.sugar_rush": "Sugar Rush!",
+
+  "block.hallofween.candy_corn_cake": "Candy Corn Cake",
+  "block.hallofween.soul_cake": "Soul Cake",
+
+  "item.hallofween.testificate": "Captive Testificate",
+
+  "item.hallofween.trick_or_treat_bag": "Trick-or-Treat Bag",
+  "text.trick_or_treat_bag.trick_a_tree": "§o§6Someone stitched your name on this bag. What a nice gift.",
+  "text.trick_or_treat_bag.empty": "Somehow, this bag is empty. Our universe works in myserious ways.",
+
+  "item.hallofween.candy_corn": "Candy Corn",
+  "item.hallofween.candied_apple": "Candied Apple",
+  "item.hallofween.candy_corn_custard": "Bowl of Candy Corn Custard",
+  "item.hallofween.candy_corn_cake_slice": "Slice of Candy Corn Cake",
+  "item.hallofween.strawberry_ghost": "Strawberry Ghost",
+  "item.hallofween.candy_corn_cookie": "Candy Corn Cookie",
+  "item.hallofween.candy_corn_almond_brittle": "Piece of Candy Corn Almond Brittle",
+  "item.hallofween.glazed_pear_tart": "Glazed Pear Tart",
+  "item.hallofween.glazed_pumpkin_pie": "Glazed Pumpkin Pie",
+  "item.hallofween.glazed_chocolate_raspberry_cookie": "Glazed Chocolate Raspberry Cookie",
+  "item.hallofween.glazed_peach_tart": "Glazed Peach Tart",
+  "item.hallofween.homemade_campfire_treat": "Homemade Campfire Treat",
+  "item.hallofween.omnomberry_ghost": "Omnomberry Ghost",
+  "item.hallofween.saint_bones": "Saint Bones",
+  "item.hallofween.soul_pastry": "Soul Pastry",
+  "item.hallofween.spicy_pumpkin_cookie": "Spicy Pumpkin Cookie",
+
+  "item.hallofween.rotten_egg": "Rotten Egg",
+  "item.hallofween.toilet_paper": "Toilet Paper",
+
+  "entity.hallofween.rotten_egg": "Rotten Egg",
+  "entity.hallofween.toilet_paper": "Toilet Paper",
+
+  "itemGroup.hallofween.hallofween": "Hall of Ween"
+}

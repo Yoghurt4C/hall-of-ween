@@ -1,0 +1,10 @@
+{
+    "parent": "minecraft:block/cake_slice2",
+    "textures": {
+        "particle": "hallofween:block/candy_corn_cake_side",
+        "bottom": "hallofween:block/candy_corn_cake_bottom",
+        "top": "hallofween:block/candy_corn_cake_top",
+        "side": "hallofween:block/candy_corn_cake_side",
+        "inside": "hallofween:block/candy_corn_cake_inner"
+    }
+}
