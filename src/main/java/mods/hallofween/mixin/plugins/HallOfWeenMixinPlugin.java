@@ -23,6 +23,8 @@ public class HallOfWeenMixinPlugin implements IMixinConfigPlugin {
     public boolean shouldApplyMixin(String targetClassName, String mixinClassName) {
         if (mixinClassName.equals("mods.hallofween.mixin.LivingEntityMixin"))
             return Config.injectToTBags;
+        else if (mixinClassName.startsWith("mods.hallofween.mixin.discovery"))
+            return Config.enableDiscoveryRecipes;
         return true;
     }
 

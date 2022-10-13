@@ -21,7 +21,7 @@ import static mods.hallofween.HallOfWeen.L;
 public class Config {
     private static boolean isInitialized = false;
     public static float testificateChance;
-    public static boolean annoyingTestificates, injectTestificatesIntoLootTables, disableDefaultToTBag, injectToTBags;
+    public static boolean annoyingTestificates, injectTestificatesIntoLootTables, disableDefaultToTBag, injectToTBags, enableDiscoveryRecipes;
 
     public static void tryInit() {
         if (!isInitialized) init();
@@ -39,7 +39,9 @@ public class Config {
                 Entry.of("disableDefaultToTBag", false,
                         "disableDefaultToTBag: Disables the default Trick-or-Treat Bag.\n#Its Loot Table is still loaded by the game, so you'll have to clean that up yourself. [Side: SERVER | Default: false]"),
                 Entry.of("injectToTBags", true,
-                        "injectToTBags: If false, the mod ceases attempts to modify loot tables based on predicates in Trick-or-Treat Bag JSONs. [Side: SERVER | Default: true]")
+                        "injectToTBags: If false, the mod ceases attempts to modify loot tables based on predicates in Trick-or-Treat Bag JSONs. [Side: SERVER | Default: true]"),
+                Entry.of("enableDiscoveryRecipes", true,
+                        "enalbeDiscoveryRecipes: Setting this to false disables the functionality of testing for advancements in certain recipes. [Side: SERVER | Default: true]")
         );
         Path configPath = getConfigDir().resolve(filename);
         Map<String, String> cfg = new HashMap<>();

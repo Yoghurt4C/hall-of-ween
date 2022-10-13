@@ -1,0 +1,16 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "###",
+    "###"
+  ],
+  "key": {
+    "#": {
+      "item": "hallofween:candy_corn_cake_slice"
+    }
+  },
+  "result": {
+    "item": "hallofween:candy_corn_cake"
+  },
+  "advancement": "minecraft:story/lava_bucket"
+}

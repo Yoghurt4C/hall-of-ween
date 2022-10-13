@@ -2,10 +2,7 @@ package mods.hallofween.registry;
 
 import mods.hallofween.entity.ThrownRottenEgg;
 import mods.hallofween.entity.ThrownToiletPaper;
-import mods.hallofween.item.SpookyFoodItem;
-import mods.hallofween.item.TestificateItem;
-import mods.hallofween.item.ThrownSpookyItem;
-import mods.hallofween.item.TrickOrTreatBagItem;
+import mods.hallofween.item.*;
 import net.fabricmc.fabric.api.item.v1.FabricItemSettings;
 import net.minecraft.client.item.TooltipContext;
 import net.minecraft.entity.EquipmentSlot;
@@ -75,6 +72,8 @@ public class HallOfWeenItems {
 
         register("rotten_egg", new ThrownSpookyItem(ThrownRottenEgg::new));
         register("toilet_paper", new ThrownSpookyItem(ThrownToiletPaper::new));
+
+        register("recipe_sheet", new RecipeSheetItem(new FabricItemSettings()));
     }
 
     private static void register(String id, Item item) {

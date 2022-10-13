@@ -1,5 +1,7 @@
 package mods.hallofween;
 
+import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
+import mods.hallofween.item.RecipeSheetItem;
 import mods.hallofween.network.S2CToTSyncMessage;
 import mods.hallofween.registry.HallOfWeenBlocks;
 import mods.hallofween.registry.HallOfWeenItems;
@@ -22,14 +24,21 @@ import net.minecraft.util.registry.Registry;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import java.util.Map;
+
 public class HallOfWeen implements ModInitializer {
     public static final Identifier DEFAULTID = new Identifier("hallofween", "hallofween");
+    public static Map<Identifier, Identifier> DISCOVERY = new Object2ObjectOpenHashMap<>();
     public static ItemGroup ITEMGROUP = FabricItemGroupBuilder.create(DEFAULTID)
             .icon(() -> new ItemStack(getItem("testificate")))
             .build();
     public static ItemGroup TOT_GROUP = FabricItemGroupBuilder.create(getId("tot_bags"))
             .icon(() -> new ItemStack(getItem("trick_or_treat_bag")))
             .appendItems(ToTRegistry::appendItems)
+            .build();
+    public static ItemGroup DISCOVERY_GROUP = FabricItemGroupBuilder.create(getId("discovery"))
+            .icon(() -> new ItemStack(getItem("recipe_sheet")))
+            .appendItems(RecipeSheetItem::appendStacks)
             .build();
     public static final Logger L = LogManager.getLogger("Hall of Ween");
 

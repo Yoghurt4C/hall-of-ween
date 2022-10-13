@@ -26,6 +26,9 @@
   "text.hallofween.xp": "+%d XP when eaten.",
   "text.hallofween.sugar_rush": "Sugar Rush!",
 
+  "text.hallofween.recipe_sheet":"Consume to learn the recipe for",
+  "text.hallofween.recipe_sheet_empty": "This sheet is completely blank. Weird.",
+
   "block.hallofween.candy_corn_cake": "Candy Corn Cake",
   "block.hallofween.soul_cake": "Soul Cake",
 
@@ -58,5 +61,9 @@
   "entity.hallofween.rotten_egg": "Rotten Egg",
   "entity.hallofween.toilet_paper": "Toilet Paper",
 
-  "itemGroup.hallofween.hallofween": "Hall of Ween"
+  "item.hallofween.recipe_sheet": "Recipe Sheet",
+
+  "itemGroup.hallofween.hallofween": "Hall of Ween",
+  "itemGroup.hallofween.tot_bags": "Hall of Ween: Trick-or-Treat Bags",
+  "itemGroup.hallofween.discovery": "Hall of Ween: Recipe Sheets"
 }

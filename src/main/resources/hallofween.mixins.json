@@ -5,7 +5,11 @@
   "plugin": "mods.hallofween.mixin.plugins.HallOfWeenMixinPlugin",
   "compatibilityLevel": "JAVA_8",
   "mixins": [
-    "LivingEntityMixin"
+    "LivingEntityMixin",
+    "discovery.CraftingInventoryAccessor",
+    "discovery.CraftingScreenHandlerAccessor",
+    "discovery.ShapedRecipeMixin",
+    "discovery.ShapedRecipeMixin$ShapedRecipeSerializerMixin"
   ],
   "client": [
     "EntitySpawnSyncMixin"

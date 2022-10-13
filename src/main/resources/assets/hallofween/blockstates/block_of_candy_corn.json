@@ -1,0 +1,27 @@
+{
+  "variants": {
+    "": [
+      {
+        "model": "hallofween:block/block_of_candy_corn"
+      },
+      {
+        "model": "hallofween:block/block_of_candy_corn",
+        "y": 90,
+        "x": 90,
+        "z": 90
+      },
+      {
+        "model": "hallofween:block/block_of_candy_corn",
+        "y": 180,
+        "x": 180,
+        "z": 180
+      },
+      {
+        "model": "hallofween:block/block_of_candy_corn",
+        "y": 270,
+        "x": 270,
+        "z": 270
+      }
+    ]
+  }
+}
