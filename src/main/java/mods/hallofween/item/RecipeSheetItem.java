@@ -45,36 +45,9 @@ public class RecipeSheetItem extends Item {
         super.appendTooltip(stack, world, tooltip, context);
     }
 
-    /*@Override
-    public TypedActionResult<ItemStack> use(World world, PlayerEntity user, Hand hand) {
-        if (!world.isClient()) {
-            ItemStack stack = user.getStackInHand(hand);
-            if (stack.hasTag() && stack.getTag().contains("targetItem")) {/*
-                Identifier id = new Identifier(stack.getTag().getString("targetItem"));
-                if (DISCOVERY.containsKey(id)) {
-                    Advancement adv = world.getServer().getAdvancementLoader().get(DISCOVERY.get(id));
-                    PlayerAdvancementTracker tracker = world.getServer().getPlayerManager().getAdvancementTracker((ServerPlayerEntity) user);
-                    if (adv != null && !tracker.getProgress(adv).isDone()) {
-                        for (String s : adv.getCriteria().keySet()) {
-                            tracker.grantCriterion(adv, s);
-                        }
-                    }
-
-                    world.playSound(null, user.getBlockPos(), SoundEvents.ENTITY_EXPERIENCE_ORB_PICKUP, SoundCategory.PLAYERS, 0.8f, 0.15f);
-                    if (Config.recipeSheetXP) user.addExperience(1);
-                    stack.decrement(1);
-                    return TypedActionResult.success(stack, true);
-                //}
-            }
-            stack.decrement(1);
-        }
-        return super.use(world, user, hand);
-    }
-    */
-
     @Override
     public ItemStack finishUsing(ItemStack stack, World world, LivingEntity user) {
-        if (world.isClient()) {
+        if (!world.isClient()) {
             if (stack.hasTag() && stack.getTag().contains("targetItem")) {
                 //Identifier id = new Identifier(stack.getTag().getString("targetItem"));
                 world.playSound(null, user.getBlockPos(), SoundEvents.ENTITY_EXPERIENCE_ORB_PICKUP, SoundCategory.PLAYERS, 0.8f, 0.15f);
