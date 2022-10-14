@@ -1,0 +1,27 @@
+{
+    "type": "minecraft:crafting_shaped",
+    "pattern": [
+        "CCC",
+        "CGC",
+        "WEW"
+    ],
+    "key": {
+        "W": {
+            "item": "minecraft:wheat"
+        },
+        "E": {
+            "item": "minecraft:egg"
+        },
+        "C": {
+            "item": "hallofween:candy_corn"
+        },
+        "G": {
+            "item": "hallofween:candy_corn_glaze"
+        }
+    },
+    "result": {
+        "item": "hallofween:candy_corn_cake_slice",
+        "count": 3
+    },
+    "advancement": "hallofween:discovery/candy_corn/candy_corn_cake_slice"
+}

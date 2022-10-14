@@ -1,10 +1,16 @@
 package mods.hallofween.item;
 
+import mods.hallofween.Config;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.item.TooltipContext;
+import net.minecraft.entity.LivingEntity;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.sound.SoundCategory;
+import net.minecraft.sound.SoundEvent;
+import net.minecraft.sound.SoundEvents;
 import net.minecraft.text.MutableText;
 import net.minecraft.text.Text;
 import net.minecraft.text.TranslatableText;
@@ -33,8 +39,55 @@ public class RecipeSheetItem extends Item {
                     .append(" ")
                     .append(item.formatted(Formatting.BOLD))
                     .append("."));
+            if (Config.recipeSheetXP)
+                tooltip.add(new TranslatableText("text.hallofween.xp", 1).formatted(Formatting.GREEN));
         } else tooltip.add(new TranslatableText("text.hallofween.recipe_sheet_empty"));
         super.appendTooltip(stack, world, tooltip, context);
+    }
+
+    /*@Override
+    public TypedActionResult<ItemStack> use(World world, PlayerEntity user, Hand hand) {
+        if (!world.isClient()) {
+            ItemStack stack = user.getStackInHand(hand);
+            if (stack.hasTag() && stack.getTag().contains("targetItem")) {/*
+                Identifier id = new Identifier(stack.getTag().getString("targetItem"));
+                if (DISCOVERY.containsKey(id)) {
+                    Advancement adv = world.getServer().getAdvancementLoader().get(DISCOVERY.get(id));
+                    PlayerAdvancementTracker tracker = world.getServer().getPlayerManager().getAdvancementTracker((ServerPlayerEntity) user);
+                    if (adv != null && !tracker.getProgress(adv).isDone()) {
+                        for (String s : adv.getCriteria().keySet()) {
+                            tracker.grantCriterion(adv, s);
+                        }
+                    }
+
+                    world.playSound(null, user.getBlockPos(), SoundEvents.ENTITY_EXPERIENCE_ORB_PICKUP, SoundCategory.PLAYERS, 0.8f, 0.15f);
+                    if (Config.recipeSheetXP) user.addExperience(1);
+                    stack.decrement(1);
+                    return TypedActionResult.success(stack, true);
+                //}
+            }
+            stack.decrement(1);
+        }
+        return super.use(world, user, hand);
+    }
+    */
+
+    @Override
+    public ItemStack finishUsing(ItemStack stack, World world, LivingEntity user) {
+        if (world.isClient()) {
+            if (stack.hasTag() && stack.getTag().contains("targetItem")) {
+                //Identifier id = new Identifier(stack.getTag().getString("targetItem"));
+                world.playSound(null, user.getBlockPos(), SoundEvents.ENTITY_EXPERIENCE_ORB_PICKUP, SoundCategory.PLAYERS, 0.8f, 0.15f);
+                if (Config.recipeSheetXP && user instanceof PlayerEntity) ((PlayerEntity) user).addExperience(1);
+                return user.eatFood(world, stack);
+            }
+        }
+        return super.finishUsing(stack, world, user);
+    }
+
+    @Override
+    public SoundEvent getEatSound() {
+        return SoundEvents.ITEM_BOOK_PAGE_TURN;
     }
 
     @Environment(EnvType.CLIENT)

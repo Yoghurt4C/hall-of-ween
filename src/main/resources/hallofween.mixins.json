@@ -9,7 +9,9 @@
     "discovery.CraftingInventoryAccessor",
     "discovery.CraftingScreenHandlerAccessor",
     "discovery.ShapedRecipeMixin",
-    "discovery.ShapedRecipeMixin$ShapedRecipeSerializerMixin"
+    "discovery.ShapedRecipeMixin$ShapedRecipeSerializerMixin",
+    "discovery.ShapelessRecipeMixin",
+    "discovery.ShapelessRecipeMixin$ShapelessRecipeSerializerMixin"
   ],
   "client": [
     "EntitySpawnSyncMixin"

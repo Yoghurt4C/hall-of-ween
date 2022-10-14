@@ -1,0 +1,37 @@
+{
+    "type": "minecraft:crafting_shapeless",
+    "ingredients": [
+        {
+            "item": "minecraft:sugar"
+        },
+        {
+            "item": "minecraft:sugar"
+        },
+        {
+            "item": "minecraft:sugar"
+        },
+        {
+            "item": "minecraft:wheat"
+        },
+        {
+            "item": "minecraft:cocoa_beans"
+        },
+        {
+            "item": "minecraft:cocoa_beans"
+        },
+        {
+            "item": "minecraft:egg"
+        },
+        {
+            "item": "minecraft:bone_meal"
+        },
+        {
+            "item": "hallofween:candy_corn_glaze"
+        }
+    ],
+    "result": {
+        "item": "hallofween:homemade_campfire_treat",
+        "count": 2
+    },
+    "advancement": "hallofween:discovery/candy_corn/homemade_campfire_treat"
+}

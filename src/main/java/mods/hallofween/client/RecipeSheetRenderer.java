@@ -1,5 +1,6 @@
 package mods.hallofween.client;
 
+import mods.hallofween.Config;
 import mods.hallofween.HallOfWeen;
 import net.fabricmc.fabric.api.client.rendering.v1.BuiltinItemRendererRegistry;
 import net.minecraft.client.MinecraftClient;
@@ -35,23 +36,30 @@ public class RecipeSheetRenderer implements BuiltinItemRendererRegistry.DynamicI
             ItemStack render = new ItemStack(item);
             matrices.push();
             BakedModel model = mc.getItemRenderer().getHeldItemModel(render, null, null);
-            if (mode != Mode.GUI) {
-                matrices.peek().getModel().multiply(Matrix4f.scale(0.4f, 0.4f, 0.01f));
-                Quaternion quaternion;
-                if (model.isSideLit()) {
-                    quaternion = new Quaternion(Vector3f.POSITIVE_X, -15f, true);
-                    quaternion.hamiltonProduct(new Quaternion(Vector3f.POSITIVE_Y, 45f, true));
-                    matrices.peek().getNormal().multiply(quaternion);
-                } else {
-                    quaternion = new Quaternion(Vector3f.POSITIVE_X, -5f, true);
-                    matrices.peek().getNormal().multiply(quaternion);
-                }
+            if (Config.faithfulRecipeSheets) {
+                matrices.scale(0.45f, 0.45f, 0.01f);
+                matrices.translate(1f, 0.93f, 53.5f);
+                mc.getItemRenderer().renderItem(new ItemStack(item), ModelTransformation.Mode.GUI, false, matrices, vertexConsumers, 0, overlay, model);
+                matrices.pop();
             } else {
-                matrices.scale(0.4f, 0.4f, 0.01f);
+                if (mode != Mode.GUI) {
+                    matrices.peek().getModel().multiply(Matrix4f.scale(0.45f, 0.45f, 0.01f));
+                    Quaternion quaternion;
+                    if (model.isSideLit()) {
+                        quaternion = new Quaternion(Vector3f.POSITIVE_X, -15f, true);
+                        quaternion.hamiltonProduct(new Quaternion(Vector3f.POSITIVE_Y, 45f, true));
+                        matrices.peek().getNormal().multiply(quaternion);
+                    } else {
+                        quaternion = new Quaternion(Vector3f.POSITIVE_X, -5f, true);
+                        matrices.peek().getNormal().multiply(quaternion);
+                    }
+                } else {
+                    matrices.scale(0.45f, 0.45f, 0.01f);
+                }
+                matrices.translate(1f, 0.93f, 53.5f);
+                mc.getItemRenderer().renderItem(new ItemStack(item), ModelTransformation.Mode.GUI, false, matrices, vertexConsumers, light, overlay, model);
+                matrices.pop();
             }
-            matrices.translate(1.15f, 1f, 53.5f);
-            mc.getItemRenderer().renderItem(new ItemStack(item), ModelTransformation.Mode.GUI, false, matrices, vertexConsumers, light, overlay, model);
-            matrices.pop();
         }
     }
 }

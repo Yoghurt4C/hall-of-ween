@@ -23,11 +23,13 @@
   "text.testificate.freed8": "Thank you. Truly.",
   "text.testificate.freed9": "Thank you for your help.",
 
-  "text.hallofween.xp": "+%d XP when eaten.",
+  "text.hallofween.xp": "+%d XP when consumed.",
   "text.hallofween.sugar_rush": "Sugar Rush!",
 
   "text.hallofween.recipe_sheet":"Consume to learn the recipe for",
   "text.hallofween.recipe_sheet_empty": "This sheet is completely blank. Weird.",
+
+  "block.hallofween.block_of_candy_corn": "Block of Candy Corn",
 
   "block.hallofween.candy_corn_cake": "Candy Corn Cake",
   "block.hallofween.soul_cake": "Soul Cake",
@@ -54,6 +56,8 @@
   "item.hallofween.saint_bones": "Saint Bones",
   "item.hallofween.soul_pastry": "Soul Pastry",
   "item.hallofween.spicy_pumpkin_cookie": "Spicy Pumpkin Cookie",
+
+  "item.hallofween.candy_corn_glaze": "Bowl of Candy Corn Glaze",
 
   "item.hallofween.rotten_egg": "Rotten Egg",
   "item.hallofween.toilet_paper": "Toilet Paper",

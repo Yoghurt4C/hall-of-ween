@@ -1,0 +1,26 @@
+{
+    "parent": "hallofween:discovery/root",
+    "rewards": {
+        "recipes": [
+            "hallofween:glazed_pumpkin_pie"
+        ]
+    },
+    "criteria": {
+        "has_the_recipe": {
+            "trigger": "minecraft:consume_item",
+            "conditions": {
+                "item": {
+                    "items": [
+                        "hallofween:recipe_sheet"
+                    ],
+                    "nbt": "{targetItem: \"hallofween:glazed_pumpkin_pie\"}"
+                }
+            }
+        }
+    },
+    "requirements": [
+        [
+            "has_the_recipe"
+        ]
+    ]
+}

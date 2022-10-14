@@ -35,12 +35,12 @@ public abstract class ShapedRecipeMixin implements DiscoveryRecipe {
 
     @SuppressWarnings("all")
     @Inject(method = "matches(Lnet/minecraft/inventory/CraftingInventory;Lnet/minecraft/world/World;)Z", at = @At("HEAD"), cancellable = true)
-    public void matchesAdvancement(CraftingInventory inv, World w, CallbackInfoReturnable<Boolean> ctx) {
-        if (this.getAdvancement() != null && !w.isClient()) {
+    public void matchesAdvancement(CraftingInventory inv, World world, CallbackInfoReturnable<Boolean> ctx) {
+        if (this.getAdvancement() != null && !world.isClient()) {
             ScreenHandler handler = ((CraftingInventoryAccessor) inv).getHandler();
             if (handler instanceof CraftingScreenHandler) {
                 PlayerEntity player = ((CraftingScreenHandlerAccessor) (CraftingScreenHandler) handler).getPlayer();
-                Advancement adv = w.getServer().getAdvancementLoader().get(this.getAdvancement());
+                Advancement adv = world.getServer().getAdvancementLoader().get(this.getAdvancement());
                 if (!((ServerPlayerEntity) player).getAdvancementTracker().getProgress(adv).isDone()) {
                     ctx.setReturnValue(false);
                 }

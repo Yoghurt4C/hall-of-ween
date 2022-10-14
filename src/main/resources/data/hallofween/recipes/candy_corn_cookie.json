@@ -1,0 +1,37 @@
+{
+    "type": "minecraft:crafting_shapeless",
+    "ingredients": [
+        {
+            "item": "minecraft:wheat"
+        },
+        {
+            "item": "minecraft:wheat"
+        },
+        {
+            "item": "hallofween:candy_corn"
+        },
+        {
+            "item": "hallofween:candy_corn"
+        },
+        {
+            "item": "hallofween:candy_corn"
+        },
+        {
+            "item": "hallofween:candy_corn"
+        },
+        {
+            "item": "hallofween:candy_corn"
+        },
+        {
+            "item": "hallofween:candy_corn"
+        },
+        {
+            "item": "hallofween:candy_corn"
+        }
+    ],
+    "result": {
+        "item": "hallofween:candy_corn_cookie",
+        "count": 8
+    },
+    "advancement": "hallofween:discovery/candy_corn/candy_corn_cookie"
+}

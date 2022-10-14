@@ -1,16 +1,15 @@
 {
-  "type": "minecraft:crafting_shaped",
-  "pattern": [
-    "###",
-    "###"
+  "type": "minecraft:crafting_shapeless",
+  "ingredients": [
+    {"item":  "hallofween:candy_corn_cake_slice"},
+    {"item":  "hallofween:candy_corn_cake_slice"},
+    {"item":  "hallofween:candy_corn_cake_slice"},
+    {"item":  "hallofween:candy_corn_cake_slice"},
+    {"item":  "hallofween:candy_corn_cake_slice"},
+    {"item":  "hallofween:candy_corn_cake_slice"}
   ],
-  "key": {
-    "#": {
-      "item": "hallofween:candy_corn_cake_slice"
-    }
-  },
   "result": {
     "item": "hallofween:candy_corn_cake"
   },
-  "advancement": "minecraft:story/lava_bucket"
+  "advancement": "hallofween:discovery/candy_corn/candy_corn_cake"
 }

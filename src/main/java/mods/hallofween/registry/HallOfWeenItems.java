@@ -12,6 +12,7 @@ import net.minecraft.entity.effect.StatusEffectInstance;
 import net.minecraft.item.FoodComponent;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.item.Items;
 import net.minecraft.text.Text;
 import net.minecraft.text.TranslatableText;
 import net.minecraft.util.Formatting;
@@ -70,10 +71,12 @@ public class HallOfWeenItems {
         register("soul_pastry", new SpookyFoodItem(5, spook(4, 0.23f, GLOWING, 200, 0, 0.75f)));
         register("spicy_pumpkin_cookie", new SpookyFoodItem(6, spook(3, 0.21f, FIRE_RESISTANCE, 600, 0, 1f)));
 
+        register("candy_corn_glaze", new Item(new FabricItemSettings().group(ITEMGROUP).recipeRemainder(Items.BOWL)));
+
         register("rotten_egg", new ThrownSpookyItem(ThrownRottenEgg::new));
         register("toilet_paper", new ThrownSpookyItem(ThrownToiletPaper::new));
 
-        register("recipe_sheet", new RecipeSheetItem(new FabricItemSettings()));
+        register("recipe_sheet", new RecipeSheetItem(new FabricItemSettings().food(new FoodComponent.Builder().alwaysEdible().snack().build())));
     }
 
     private static void register(String id, Item item) {

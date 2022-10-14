@@ -1,0 +1,23 @@
+{
+  "parent": "hallofween:discovery/root",
+  "rewards": {
+    "recipes": [
+      "hallofween:candy_corn_glaze"
+    ]
+  },
+  "criteria": {
+    "gooba": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {"item": "hallofween:candy_corn"}
+        ]
+      }
+    }
+  },
+  "requirements": [
+    [
+      "gooba"
+    ]
+  ]
+}

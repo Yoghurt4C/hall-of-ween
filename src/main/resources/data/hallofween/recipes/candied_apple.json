@@ -1,0 +1,15 @@
+{
+    "type": "minecraft:crafting_shapeless",
+    "ingredients": [
+        {
+            "item": "minecraft:apple"
+        },
+        {
+            "item": "hallofween:candy_corn_glaze"
+        }
+    ],
+    "result": {
+        "item": "hallofween:candied_apple"
+    },
+    "advancement": "hallofween:discovery/candy_corn/candied_apple"
+}

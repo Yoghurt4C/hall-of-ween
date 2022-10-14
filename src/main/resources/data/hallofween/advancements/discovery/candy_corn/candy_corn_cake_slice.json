@@ -1,0 +1,26 @@
+{
+    "parent": "hallofween:discovery/root",
+    "rewards": {
+        "recipes": [
+            "hallofween:candy_corn_cake_slice"
+        ]
+    },
+    "criteria": {
+        "has_the_recipe": {
+            "trigger": "minecraft:consume_item",
+            "conditions": {
+                "item": {
+                    "items": [
+                        "hallofween:recipe_sheet"
+                    ],
+                    "nbt": "{targetItem: \"hallofween:candy_corn_cake_slice\"}"
+                }
+            }
+        }
+    },
+    "requirements": [
+        [
+            "has_the_recipe"
+        ]
+    ]
+}
