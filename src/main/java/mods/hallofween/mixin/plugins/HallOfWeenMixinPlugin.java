@@ -20,12 +20,18 @@ public class HallOfWeenMixinPlugin implements IMixinConfigPlugin {
     }
 
     @Override
-    public boolean shouldApplyMixin(String targetClassName, String mixinClassName) {
-        if (mixinClassName.equals("mods.hallofween.mixin.LivingEntityMixin"))
-            return Config.injectToTBags;
-        else if (mixinClassName.startsWith("mods.hallofween.mixin.discovery"))
+    public boolean shouldApplyMixin(String target, String mixin) {
+        if (parseFeature(mixin, "containers"))
+            return Config.injectLootContainers;
+        else if (parseFeature(mixin, "discovery"))
             return Config.enableDiscoveryRecipes;
+        else if (parseFeature(mixin, "bags"))
+            return Config.enableBagInventory;
         return true;
+    }
+
+    private boolean parseFeature(String mixin, String feature) {
+        return mixin.startsWith("mods.hallofween.mixin." + feature);
     }
 
     @Override

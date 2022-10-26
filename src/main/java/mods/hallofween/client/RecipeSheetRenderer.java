@@ -1,5 +1,6 @@
 package mods.hallofween.client;
 
+import com.mojang.blaze3d.systems.RenderSystem;
 import mods.hallofween.Config;
 import mods.hallofween.HallOfWeen;
 import net.fabricmc.fabric.api.client.rendering.v1.BuiltinItemRendererRegistry;
@@ -37,9 +38,11 @@ public class RecipeSheetRenderer implements BuiltinItemRendererRegistry.DynamicI
             matrices.push();
             BakedModel model = mc.getItemRenderer().getHeldItemModel(render, null, null);
             if (Config.faithfulRecipeSheets) {
+                RenderSystem.disableLighting();
                 matrices.scale(0.45f, 0.45f, 0.01f);
                 matrices.translate(1f, 0.93f, 53.5f);
                 mc.getItemRenderer().renderItem(new ItemStack(item), ModelTransformation.Mode.GUI, false, matrices, vertexConsumers, 0, overlay, model);
+                RenderSystem.enableLighting();
                 matrices.pop();
             } else {
                 if (mode != Mode.GUI) {

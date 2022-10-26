@@ -31,7 +31,8 @@ public class HallOfWeenItems {
         Item.Settings ds = new FabricItemSettings().group(ITEMGROUP);
         register("testificate", new TestificateItem(new FabricItemSettings().maxCount(1).group(ITEMGROUP).equipmentSlot(stack -> EquipmentSlot.HEAD)));
 
-        register("trick_or_treat_bag", new TrickOrTreatBagItem());
+        //register("trick_or_treat_bag", new TrickOrTreatBagItem(ds));
+        register("container", new ContainerItem());
 
         register("candy_corn", new SpookyFoodItem(1, spook(1, 0.1f).snack()) {
             @Override

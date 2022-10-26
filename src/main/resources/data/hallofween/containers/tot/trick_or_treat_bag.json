@@ -1,7 +1,8 @@
 {
   "tooltips": ["text.trick_or_treat_bag.trick_a_tree"],
+
   "bagColor": "0xE38A1D",
-  "magicColor": "0x9F3C9F",
+  "overlayColor": "0x9F3C9F",
   "injection_predicates": [
     {
       "starts_with": "entities",

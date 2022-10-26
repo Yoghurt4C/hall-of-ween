@@ -1,7 +1,0 @@
-{
-    "parent": "minecraft:item/generated",
-    "textures": {
-        "layer0": "hallofween:item/trick_or_treat_bag",
-        "layer1": "hallofween:item/trick_or_treat_bag_overlay"
-    }
-}

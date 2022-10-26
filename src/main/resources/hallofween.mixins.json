@@ -4,18 +4,8 @@
   "package": "mods.hallofween.mixin",
   "plugin": "mods.hallofween.mixin.plugins.HallOfWeenMixinPlugin",
   "compatibilityLevel": "JAVA_8",
-  "mixins": [
-    "LivingEntityMixin",
-    "discovery.CraftingInventoryAccessor",
-    "discovery.CraftingScreenHandlerAccessor",
-    "discovery.ShapedRecipeMixin",
-    "discovery.ShapedRecipeMixin$ShapedRecipeSerializerMixin",
-    "discovery.ShapelessRecipeMixin",
-    "discovery.ShapelessRecipeMixin$ShapelessRecipeSerializerMixin"
-  ],
-  "client": [
-    "EntitySpawnSyncMixin"
-  ],
+  "mixins": ["bags.PlayerInventoryBagHolder", "containers.LivingEntityMixin", "discovery.CraftingInventoryAccessor", "discovery.CraftingScreenHandlerAccessor", "discovery.ShapedRecipeMixin", "discovery.ShapedRecipeMixin$ShapedRecipeSerializerMixin", "discovery.ShapelessRecipeMixin", "discovery.ShapelessRecipeMixin$ShapelessRecipeSerializerMixin"],
+  "client": ["bags.client.ClientPlayerEntityMixin", "bags.client.HandledScreenAccessor", "client.EntitySpawnSyncMixin"],
   "injectors": {
     "defaultRequire": 1
   }

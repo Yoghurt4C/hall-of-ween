@@ -1,4 +1,4 @@
-package mods.hallofween.mixin;
+package mods.hallofween.mixin.client;
 
 import mods.hallofween.HallOfWeen;
 import net.minecraft.client.network.ClientPlayNetworkHandler;

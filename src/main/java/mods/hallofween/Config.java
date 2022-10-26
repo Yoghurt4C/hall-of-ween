@@ -1,6 +1,7 @@
 package mods.hallofween;
 
 import com.google.common.collect.ImmutableSet;
+import net.fabricmc.loader.api.FabricLoader;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -23,8 +24,9 @@ public class Config {
     public static float testificateChance;
     public static boolean
             annoyingTestificates, injectTestificatesIntoLootTables,
-            disableDefaultToTBag, injectToTBags,
-            enableDiscoveryRecipes, faithfulRecipeSheets, recipeSheetXP;
+            disableDefaultLootContainers, injectLootContainers,
+            enableDiscoveryRecipes, faithfulRecipeSheets, recipeSheetXP,
+            enableBagInventory = FabricLoader.getInstance().isDevelopmentEnvironment();
 
     public static void tryInit() {
         if (!isInitialized) init();
@@ -39,10 +41,10 @@ public class Config {
                         "annoyingTestificates: Captive Testificates periodically annoy you. [Side: CLIENT | Default: true]"),
                 Entry.of("injectTestificatesIntoLootTables", true,
                         "injectTestificatesIntoLootTables: Automatically adds Captive Testificates into every non-village structure chest.\n#Disable this if you want precise control using something like KubeJS. [Side: SERVER | Default: true]"),
-                Entry.of("disableDefaultToTBag", false,
-                        "disableDefaultToTBag: Disables the default Trick-or-Treat Bag.\n#Its Loot Table is still loaded by the game, so you'll have to clean that up yourself. [Side: SERVER | Default: false]"),
-                Entry.of("injectToTBags", true,
-                        "injectToTBags: If false, the mod ceases attempts to modify loot tables based on predicates in Trick-or-Treat Bag JSONs. [Side: SERVER | Default: true]"),
+                Entry.of("disableDefaultLootContainers", false,
+                        "disableDefaultLootContainers: Disables the default Loot Containers.\n#Their Loot Tables are still loaded by the game, so you'll have to clean that up yourself. [Side: SERVER | Default: false]"),
+                Entry.of("injectLootContainers", true,
+                        "injectLootContainers: If false, the mod ceases attempts to modify loot tables based on predicates in Loot Container JSONs. [Side: SERVER | Default: true]"),
                 Entry.of("enableDiscoveryRecipes", true,
                         "enalbeDiscoveryRecipes: Setting this to false disables the functionality of testing for advancements in certain recipes. [Side: SERVER | Default: true]"),
                 Entry.of("faithfulRecipeSheets", true,

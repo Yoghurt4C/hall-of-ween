@@ -1,0 +1,11 @@
+{
+  "tooltips": ["text.trick_or_treat_bag.trick_a_tree"],
+  "model": "hallofween:personalized_trick_or_treat_bag",
+  "injection_predicates": [
+    {
+      "starts_with": "entities",
+      "max_amount": 3,
+      "chance": 0.15
+    }
+  ]
+}

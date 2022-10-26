@@ -1,7 +1,7 @@
-package mods.hallofween.mixin;
+package mods.hallofween.mixin.containers;
 
-import mods.hallofween.registry.ToTRegistry;
-import mods.hallofween.registry.ToTRegistry.ToTLootProperties;
+import mods.hallofween.registry.ContainerRegistry;
+import mods.hallofween.registry.ContainerRegistry.ContainerLootProperties;
 import net.fabricmc.fabric.api.loot.v1.FabricLootPoolBuilder;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
@@ -41,16 +41,16 @@ public abstract class LivingEntityMixin extends Entity {
     @Inject(method = "dropLoot", at = @At("TAIL"), locals = LocalCapture.CAPTURE_FAILHARD)
     public void appendToTBags(DamageSource source, boolean byPlayer, CallbackInfo ctx, Identifier loot) {
         if (world.isClient()) return;
-        for (Map.Entry<String, ToTLootProperties> e : ToTRegistry.LOOT_PREDICATES.entrySet()) {
+        for (Map.Entry<String, ContainerLootProperties> e : ContainerRegistry.LOOT_PREDICATES.entrySet()) {
             Predicate<Identifier> p = e.getValue().predicate;
             if (p.test(loot)) {
                 String name = e.getKey();
-                ToTRegistry.ToTBagProperties props = ToTRegistry.BAGS.get(name);
-                ToTLootProperties lootProps = e.getValue();
+                ContainerRegistry.ContainerProperties props = ContainerRegistry.CONTAINERS.get(name);
+                ContainerLootProperties lootProps = e.getValue();
                 CompoundTag tag = new CompoundTag();
                 tag.putString("totId", name);
                 tag.putInt("bagColor", props.bagColor);
-                tag.putInt("magicColor", props.magicColor);
+                tag.putInt("magicColor", props.overlayColor);
                 FabricLootPoolBuilder b = FabricLootPoolBuilder.builder()
                         .rolls(ConstantLootTableRange.create(1))
                         .with(ItemEntry.builder(getItem("trick_or_treat_bag")))

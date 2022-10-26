@@ -1,7 +1,7 @@
 package mods.hallofween.item;
 
 import mods.hallofween.HallOfWeen;
-import mods.hallofween.registry.ToTRegistry;
+import mods.hallofween.registry.ContainerRegistry;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.item.v1.FabricItemSettings;
@@ -26,8 +26,8 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 
-public class TrickOrTreatBagItem extends Item {
-    public TrickOrTreatBagItem() {
+public class ContainerItem extends Item {
+    public ContainerItem() {
         super(new FabricItemSettings());
     }
 
@@ -44,10 +44,10 @@ public class TrickOrTreatBagItem extends Item {
 
     private void dropLoot(ItemStack stack, ServerWorld world, PlayerEntity player) {
         if (stack.hasTag()) {
-            if (stack.getTag().contains("totId")) {
-                String id = stack.getTag().getString("totId");
-                if (ToTRegistry.BAGS.containsKey(id)) {
-                    ToTRegistry.ToTBagProperties bp = ToTRegistry.BAGS.get(id);
+            if (stack.getTag().contains("bagId")) {
+                String id = stack.getTag().getString("bagId");
+                if (ContainerRegistry.CONTAINERS.containsKey(id)) {
+                    ContainerRegistry.ContainerProperties bp = ContainerRegistry.CONTAINERS.get(id);
                     Identifier identifier = HallOfWeen.getId("tot_bags/" + id);
                     LootTable lootTable = world.getServer().getLootManager().getTable(identifier);
                     LootContext ctx = new LootContext.Builder(world)
@@ -65,10 +65,10 @@ public class TrickOrTreatBagItem extends Item {
     public void appendTooltip(ItemStack stack, @Nullable World world, List<Text> tooltip, TooltipContext context) {
         super.appendTooltip(stack, world, tooltip, context);
         if (stack.hasTag()) {
-            if (stack.getTag().contains("totId")) {
-                String id = stack.getTag().getString("totId");
-                if (ToTRegistry.BAGS.containsKey(id)) {
-                    ToTRegistry.ToTBagProperties bp = ToTRegistry.BAGS.get(id);
+            if (stack.getTag().contains("bagId")) {
+                String id = stack.getTag().getString("bagId");
+                if (ContainerRegistry.CONTAINERS.containsKey(id)) {
+                    ContainerRegistry.ContainerProperties bp = ContainerRegistry.CONTAINERS.get(id);
                     if (bp.tooltips != null)
                         bp.tooltips.forEach(s -> tooltip.add(new TranslatableText(s)));
                     return;
@@ -82,12 +82,20 @@ public class TrickOrTreatBagItem extends Item {
     public static int getColor(ItemStack stack, int layer) {
         if (stack.hasTag()) {
             CompoundTag tag = stack.getTag();
-            if (tag.contains("bagColor") && tag.contains("magicColor")) {
+            if (tag.contains("bagColor") && tag.contains("overlayColor")) {
                 int bagColor = tag.getInt("bagColor");
-                int magicColor = tag.getInt("magicColor");
+                int magicColor = tag.getInt("overlayColor");
                 return layer == 0 ? bagColor : magicColor;
             }
         }
         return layer == 0 ? 0xE38A1D : 0x9F3C9F;
+    }
+
+    public static ItemStack getDefaultContainer() {
+        ItemStack stack = new ItemStack(HallOfWeen.getItem("container"));
+        stack.getOrCreateTag().putString("bagId", "trick_or_treat_bag");
+        stack.getOrCreateTag().putInt("bagColor", 0xE38A1D);
+        stack.getOrCreateTag().putInt("overlayColor", 0x9F3C9F);
+        return stack;
     }
 }

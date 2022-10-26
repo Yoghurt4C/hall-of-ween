@@ -1,11 +1,12 @@
 package mods.hallofween;
 
 import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
+import mods.hallofween.item.ContainerItem;
 import mods.hallofween.item.RecipeSheetItem;
 import mods.hallofween.network.S2CToTSyncMessage;
 import mods.hallofween.registry.HallOfWeenBlocks;
 import mods.hallofween.registry.HallOfWeenItems;
-import mods.hallofween.registry.ToTRegistry;
+import mods.hallofween.registry.ContainerRegistry;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.client.itemgroup.FabricItemGroupBuilder;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents;
@@ -32,9 +33,9 @@ public class HallOfWeen implements ModInitializer {
     public static ItemGroup ITEMGROUP = FabricItemGroupBuilder.create(DEFAULTID)
             .icon(() -> new ItemStack(getItem("testificate")))
             .build();
-    public static ItemGroup TOT_GROUP = FabricItemGroupBuilder.create(getId("tot_bags"))
-            .icon(() -> new ItemStack(getItem("trick_or_treat_bag")))
-            .appendItems(ToTRegistry::appendItems)
+    public static ItemGroup CONTAINER_GROUP = FabricItemGroupBuilder.create(getId("containers"))
+            .icon(ContainerItem::getDefaultContainer)
+            .appendItems(ContainerRegistry::appendItems)
             .build();
     public static ItemGroup DISCOVERY_GROUP = FabricItemGroupBuilder.create(getId("discovery"))
             .icon(() -> new ItemStack(getItem("recipe_sheet")))
@@ -48,7 +49,7 @@ public class HallOfWeen implements ModInitializer {
 
         HallOfWeenBlocks.init();
         HallOfWeenItems.init();
-        ToTRegistry.init();
+        ContainerRegistry.init();
 
         if (Config.injectTestificatesIntoLootTables) {
             LootTableLoadingCallback.EVENT.register((resourceManager, manager, id, supplier, setter) -> {
