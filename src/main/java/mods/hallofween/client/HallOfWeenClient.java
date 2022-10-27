@@ -8,11 +8,10 @@ import mods.hallofween.client.bags.BagWidget;
 import mods.hallofween.entity.ThrownRottenEgg;
 import mods.hallofween.entity.ThrownToiletPaper;
 import mods.hallofween.item.ContainerItem;
-import mods.hallofween.network.S2CToTSyncMessage;
 import mods.hallofween.registry.HallOfWeenEntities;
+import mods.hallofween.registry.HallOfWeenNetworking;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.fabric.api.client.model.ModelLoadingRegistry;
-import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.fabricmc.fabric.api.client.rendereregistry.v1.EntityRendererRegistry;
 import net.fabricmc.fabric.api.client.rendering.v1.BuiltinItemRendererRegistry;
 import net.fabricmc.fabric.api.client.rendering.v1.ColorProviderRegistry;
@@ -21,12 +20,9 @@ import net.minecraft.client.render.entity.FlyingItemEntityRenderer;
 import net.minecraft.client.util.ModelIdentifier;
 import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
-import net.minecraft.util.registry.Registry;
 
-import java.io.IOException;
 import java.util.Collection;
 
-import static mods.hallofween.HallOfWeen.L;
 import static mods.hallofween.HallOfWeen.getId;
 
 public class HallOfWeenClient implements ClientModInitializer {
@@ -46,7 +42,7 @@ public class HallOfWeenClient implements ClientModInitializer {
             }
         }));
         BuiltinItemRendererRegistry.INSTANCE.register(HallOfWeen.getItem("container"), new ContainerRenderer());
-        ClientPlayNetworking.registerGlobalReceiver(S2CToTSyncMessage.MESSAGEID, S2CToTSyncMessage::receive);
+        HallOfWeenNetworking.initClient();
 
         EntityRendererRegistry.INSTANCE.register(HallOfWeenEntities.ROTTEN_EGG, (
                 (erd, ctx) -> new FlyingItemEntityRenderer<ThrownRottenEgg>(erd, ctx.getItemRenderer())));

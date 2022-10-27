@@ -1,7 +1,7 @@
 {
-  "tooltips": ["text.trick_or_treat_bag.trick_a_tree"],
-
-  "bagColor": "0xE38A1D",
+  "name": "text.container.trick_or_treat_bag",
+  "model": "hallofween:trick_or_treat_bag",
+  "bagColor": "0xE3901D",
   "overlayColor": "0x9F3C9F",
   "injection_predicates": [
     {

@@ -1,7 +1,6 @@
 package mods.hallofween.item;
 
 import mods.hallofween.HallOfWeen;
-import mods.hallofween.registry.ContainerRegistry;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.item.v1.FabricItemSettings;
@@ -26,6 +25,9 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 
+import static mods.hallofween.registry.ContainerRegistry.CONTAINERS;
+import static mods.hallofween.registry.ContainerRegistry.ContainerProperties;
+
 public class ContainerItem extends Item {
     public ContainerItem() {
         super(new FabricItemSettings());
@@ -46,19 +48,32 @@ public class ContainerItem extends Item {
         if (stack.hasTag()) {
             if (stack.getTag().contains("bagId")) {
                 String id = stack.getTag().getString("bagId");
-                if (ContainerRegistry.CONTAINERS.containsKey(id)) {
-                    ContainerRegistry.ContainerProperties bp = ContainerRegistry.CONTAINERS.get(id);
-                    Identifier identifier = HallOfWeen.getId("tot_bags/" + id);
+                if (CONTAINERS.containsKey(id)) {
+                    ContainerProperties bp = CONTAINERS.get(id);
+                    Identifier identifier = HallOfWeen.getId("containers/" + id);
                     LootTable lootTable = world.getServer().getLootManager().getTable(identifier);
-                    LootContext ctx = new LootContext.Builder(world)
-                            .parameter(LootContextParameters.THIS_ENTITY, player)
-                            .random(world.random)
-                            .build(LootContextTypes.BARTER);
-                    lootTable.generateLoot(ctx, (s) -> player.inventory.offerOrDrop(world, s));
+                    if (lootTable != LootTable.EMPTY) {
+                        LootContext ctx = new LootContext.Builder(world)
+                                .parameter(LootContextParameters.THIS_ENTITY, player)
+                                .random(world.random)
+                                .build(LootContextTypes.BARTER);
+                        lootTable.generateLoot(ctx, (s) -> player.inventory.offerOrDrop(world, s));
+                    }
                 }
             }
         }
         stack.decrement(1);
+    }
+
+    @Override
+    public String getTranslationKey(ItemStack stack) {
+        if (stack.hasTag() && stack.getTag().contains("bagId")) {
+            String id = stack.getTag().getString("bagId");
+            if (CONTAINERS.containsKey(id)) {
+                return CONTAINERS.get(id).name;
+            }
+        }
+        return this.getTranslationKey();
     }
 
     @Override
@@ -67,15 +82,15 @@ public class ContainerItem extends Item {
         if (stack.hasTag()) {
             if (stack.getTag().contains("bagId")) {
                 String id = stack.getTag().getString("bagId");
-                if (ContainerRegistry.CONTAINERS.containsKey(id)) {
-                    ContainerRegistry.ContainerProperties bp = ContainerRegistry.CONTAINERS.get(id);
+                if (CONTAINERS.containsKey(id)) {
+                    ContainerProperties bp = CONTAINERS.get(id);
                     if (bp.tooltips != null)
                         bp.tooltips.forEach(s -> tooltip.add(new TranslatableText(s)));
                     return;
                 }
             }
         }
-        tooltip.add(new TranslatableText("text.trick_or_treat_bag.empty").formatted(Formatting.DARK_PURPLE, Formatting.ITALIC));
+        tooltip.add(new TranslatableText("text.container.empty").formatted(Formatting.DARK_PURPLE, Formatting.ITALIC));
     }
 
     @Environment(EnvType.CLIENT)
@@ -88,14 +103,14 @@ public class ContainerItem extends Item {
                 return layer == 0 ? bagColor : magicColor;
             }
         }
-        return layer == 0 ? 0xE38A1D : 0x9F3C9F;
+        return 0xFFFFFF;
     }
 
     public static ItemStack getDefaultContainer() {
         ItemStack stack = new ItemStack(HallOfWeen.getItem("container"));
         stack.getOrCreateTag().putString("bagId", "trick_or_treat_bag");
-        stack.getOrCreateTag().putInt("bagColor", 0xE38A1D);
-        stack.getOrCreateTag().putInt("overlayColor", 0x9F3C9F);
+        stack.getTag().putInt("bagColor", 0xE3901D);
+        stack.getTag().putInt("overlayColor", 0x9F3C9F);
         return stack;
     }
 }

@@ -3,11 +3,11 @@ package mods.hallofween.client;
 import com.mojang.blaze3d.systems.RenderSystem;
 import mods.hallofween.Config;
 import mods.hallofween.HallOfWeen;
+import mods.hallofween.mixin.client.ItemRendererAccessor;
 import net.fabricmc.fabric.api.client.rendering.v1.BuiltinItemRendererRegistry;
 import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.render.RenderLayer;
 import net.minecraft.client.render.RenderLayers;
-import net.minecraft.client.render.TexturedRenderLayers;
+import net.minecraft.client.render.VertexConsumer;
 import net.minecraft.client.render.VertexConsumerProvider;
 import net.minecraft.client.render.model.BakedModel;
 import net.minecraft.client.render.model.json.ModelTransformation;
@@ -30,8 +30,9 @@ public class RecipeSheetRenderer implements BuiltinItemRendererRegistry.DynamicI
     public void render(ItemStack stack, Mode mode, MatrixStack matrices, VertexConsumerProvider vertexConsumers, int light, int overlay) {
         MinecraftClient mc = MinecraftClient.getInstance();
         BakedModel sheet = mc.getBakedModelManager().getModel(sheetModel);
-        RenderLayer layer = mode == Mode.FIXED ? TexturedRenderLayers.getEntityCutout() : RenderLayers.getItemLayer(stack, true);
-        mc.getBlockRenderManager().getModelRenderer().render(matrices.peek(), vertexConsumers.getBuffer(layer), null, sheet, 1f, 1f, 1f, light, overlay);
+        VertexConsumer vc = vertexConsumers.getBuffer(RenderLayers.getItemLayer(stack, true));
+        ItemRendererAccessor ir = (ItemRendererAccessor) mc.getItemRenderer();
+        ir.renderModel(sheet, stack, light, overlay, matrices, vc);
         if (stack.hasTag() && stack.getTag().contains("targetItem")) {
             Item item = Registry.ITEM.get(new Identifier(stack.getTag().getString("targetItem")));
             ItemStack render = new ItemStack(item);

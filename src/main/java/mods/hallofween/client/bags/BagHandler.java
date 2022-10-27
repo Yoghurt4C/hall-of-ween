@@ -1,9 +1,7 @@
 package mods.hallofween.client.bags;
 
 import mods.hallofween.bags.BagHolder;
-import mods.hallofween.bags.BagInventory;
 import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.inventory.Inventory;
 import net.minecraft.screen.slot.Slot;
 
 import java.util.List;

@@ -224,8 +224,8 @@ public class BagWidget extends Screen {
 
                 ItemStack itemStack2;
                 int i;
-                for(Iterator var2 = this.cursorDragSlots.iterator(); var2.hasNext(); this.draggedStackRemainder -= itemStack2.getCount() - i) {
-                    Slot slot = (Slot)var2.next();
+                for (Iterator var2 = this.cursorDragSlots.iterator(); var2.hasNext(); this.draggedStackRemainder -= itemStack2.getCount() - i) {
+                    Slot slot = (Slot) var2.next();
                     itemStack2 = itemStack.copy();
                     ItemStack itemStack3 = slot.getStack();
                     i = itemStack3.isEmpty() ? 0 : itemStack3.getCount();

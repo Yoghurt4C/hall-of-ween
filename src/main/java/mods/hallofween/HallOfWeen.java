@@ -3,29 +3,33 @@ package mods.hallofween;
 import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
 import mods.hallofween.item.ContainerItem;
 import mods.hallofween.item.RecipeSheetItem;
-import mods.hallofween.network.S2CToTSyncMessage;
+import mods.hallofween.registry.ContainerRegistry;
+import mods.hallofween.registry.ContainerRegistry.ContainerLootProperties;
+import mods.hallofween.registry.ContainerRegistry.ContainerProperties;
 import mods.hallofween.registry.HallOfWeenBlocks;
 import mods.hallofween.registry.HallOfWeenItems;
-import mods.hallofween.registry.ContainerRegistry;
+import mods.hallofween.registry.HallOfWeenNetworking;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.client.itemgroup.FabricItemGroupBuilder;
-import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents;
 import net.fabricmc.fabric.api.loot.v1.FabricLootPoolBuilder;
 import net.fabricmc.fabric.api.loot.v1.event.LootTableLoadingCallback;
-import net.fabricmc.fabric.api.networking.v1.ServerPlayConnectionEvents;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemGroup;
 import net.minecraft.item.ItemStack;
 import net.minecraft.loot.ConstantLootTableRange;
+import net.minecraft.loot.UniformLootTableRange;
 import net.minecraft.loot.condition.RandomChanceLootCondition;
 import net.minecraft.loot.entry.ItemEntry;
 import net.minecraft.loot.function.SetCountLootFunction;
+import net.minecraft.loot.function.SetNbtLootFunction;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.registry.Registry;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import java.util.Map;
+import java.util.function.Predicate;
 
 public class HallOfWeen implements ModInitializer {
     public static final Identifier DEFAULTID = new Identifier("hallofween", "hallofween");
@@ -49,7 +53,7 @@ public class HallOfWeen implements ModInitializer {
 
         HallOfWeenBlocks.init();
         HallOfWeenItems.init();
-        ContainerRegistry.init();
+        HallOfWeenNetworking.init();
 
         if (Config.injectTestificatesIntoLootTables) {
             LootTableLoadingCallback.EVENT.register((resourceManager, manager, id, supplier, setter) -> {
@@ -64,12 +68,38 @@ public class HallOfWeen implements ModInitializer {
             });
         }
 
-        ServerPlayConnectionEvents.JOIN.register(S2CToTSyncMessage::send);
-        ServerLifecycleEvents.END_DATA_PACK_RELOAD.register(S2CToTSyncMessage::send);
+        if (Config.injectLootContainers) {
+            LootTableLoadingCallback.EVENT.register((resourceManager, manager, id, supplier, setter) -> {
+                for (Map.Entry<String, ContainerLootProperties> e : ContainerRegistry.LOOT_PREDICATES.entrySet()) {
+                    Predicate<Identifier> p = e.getValue().predicate;
+                    if (p.test(id)) {
+                        String name = e.getKey();
+                        ContainerProperties props = ContainerRegistry.CONTAINERS.get(name);
+                        ContainerLootProperties lootProps = e.getValue();
+                        CompoundTag tag = new CompoundTag();
+                        tag.putString("bagId", name);
+                        tag.putInt("bagColor", props.bagColor);
+                        tag.putInt("overlayColor", props.overlayColor);
+                        FabricLootPoolBuilder b = FabricLootPoolBuilder.builder()
+                                .rolls(ConstantLootTableRange.create(1))
+                                .with(ItemEntry.builder(getItem("container")))
+                                .withFunction(SetNbtLootFunction.builder(tag).build())
+                                .withFunction(SetCountLootFunction.builder(UniformLootTableRange.between(lootProps.min, lootProps.max)).build())
+                                .withCondition(RandomChanceLootCondition.builder(lootProps.chance).build());
+                        supplier.withPool(b.build());
+                    }
+                }
+            });
+        }
+
+    }
+
+    public static String getModId() {
+        return DEFAULTID.getNamespace();
     }
 
     public static Identifier getId(String id) {
-        return new Identifier(DEFAULTID.getNamespace(), id);
+        return new Identifier(getModId(), id);
     }
 
     public static Item getItem(String id) {

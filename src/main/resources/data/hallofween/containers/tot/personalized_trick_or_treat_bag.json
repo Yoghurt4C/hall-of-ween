@@ -1,11 +1,12 @@
 {
-  "tooltips": ["text.trick_or_treat_bag.trick_a_tree"],
+  "name": "text.container.personalized_trick_or_treat_bag",
   "model": "hallofween:personalized_trick_or_treat_bag",
+  "tooltips": ["text.personalized_tot_bag.trick_a_tree"],
   "injection_predicates": [
     {
       "starts_with": "entities",
-      "max_amount": 3,
-      "chance": 0.15
+      "max_amount": 1,
+      "chance": 0.1
     }
   ]
 }

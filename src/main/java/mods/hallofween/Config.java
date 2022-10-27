@@ -60,7 +60,7 @@ public class Config {
             StringBuilder content = new StringBuilder().append("#Audino Configuration.\n");
             content.append("#Last generated at: ").append(new Date()).append("\n\n");
             if (Files.notExists(configPath) && !configurationFile.createNewFile())
-                L.error("[" + HallOfWeen.DEFAULTID.getNamespace() + "] Can't create config file \"" + configurationFile + "\". This is probably bad.");
+                L.error("[" + HallOfWeen.getModId() + "] Can't create config file \"" + configurationFile + "\". This is probably bad.");
             BufferedReader r = Files.newBufferedReader(configPath, StandardCharsets.UTF_8);
 
             String line;
@@ -109,14 +109,14 @@ public class Config {
             }
             isInitialized = true;
         } catch (IOException e) {
-            L.fatal("[" + HallOfWeen.DEFAULTID.getNamespace() + "] Could not read/write config!");
+            L.fatal("[" + HallOfWeen.getModId() + "] Could not read/write config!");
             L.fatal(e);
         }
     }
 
     private static void logEntryError(File configurationFile, String key, Object value, String found, String expected) {
-        L.error("[" + HallOfWeen.DEFAULTID.getNamespace() + "] Error processing configuration file \"" + configurationFile + "\".");
-        L.error("[" + HallOfWeen.DEFAULTID.getNamespace() + "] Expected configuration value for " + key + " to be " + expected + ", found \"" + found + "\". Using default value \"" + value + "\" instead.");
+        L.error("[" + HallOfWeen.getModId() + "] Error processing configuration file \"" + configurationFile + "\".");
+        L.error("[" + HallOfWeen.getModId() + "] Expected configuration value for " + key + " to be " + expected + ", found \"" + found + "\". Using default value \"" + value + "\" instead.");
         setCfgValue(key, value);
     }
 
@@ -124,7 +124,7 @@ public class Config {
         try {
             Config.class.getDeclaredField(k).set(Config.class, v);
         } catch (NoSuchFieldException | IllegalAccessException e) {
-            L.error("[" + HallOfWeen.DEFAULTID.getNamespace() + "] Could not set the runtime config state!");
+            L.error("[" + HallOfWeen.getModId() + "] Could not set the runtime config state!");
             L.error(e);
         }
     }

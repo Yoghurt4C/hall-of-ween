@@ -12,13 +12,13 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
-import java.util.ArrayList;
-import java.util.List;
-
 @Mixin(PlayerInventory.class)
 public abstract class PlayerInventoryBagHolder implements BagHolder {
-    @Shadow @Final public PlayerEntity player;
-    @Unique BagInventory bagInv;
+    @Shadow
+    @Final
+    public PlayerEntity player;
+    @Unique
+    BagInventory bagInv;
 
     @Inject(method = "<init>", at = @At("TAIL"))
     public void gfy(PlayerEntity player, CallbackInfo ctx) {

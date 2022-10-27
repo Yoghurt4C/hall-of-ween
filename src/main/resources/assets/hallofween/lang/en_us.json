@@ -37,8 +37,11 @@
   "item.hallofween.testificate": "Captive Testificate",
 
   "item.hallofween.container": "Empty Container",
-  "text.trick_or_treat_bag.trick_a_tree": "§o§6Someone stitched your name on this bag. What a nice gift.",
-  "text.trick_or_treat_bag.empty": "Somehow, this bag is empty. Our universe works in myserious ways.",
+  "text.container.trick_or_treat_bag": "Trick-or-Treat Bag",
+  "text.container.personalized_trick_or_treat_bag": "Personalized Trick-or-Treat Bag",
+  "text.container.childs_trick_or_treat_bag": "Child's Trick-or-Treat Bag",
+  "text.personalized_tot_bag.trick_a_tree": "§o§bSomeone stitched your name on this bag. What a nice gift.",
+  "text.container.empty": "Somehow, this bag is empty. Our universe works in myserious ways.",
 
   "item.hallofween.candy_corn": "Candy Corn",
   "item.hallofween.candied_apple": "Candied Apple",
@@ -66,8 +69,10 @@
   "entity.hallofween.toilet_paper": "Toilet Paper",
 
   "item.hallofween.recipe_sheet": "Recipe Sheet",
+  "text.hallofween.rei_adv_id": "Advancement: %d",
+  "text.hallofween.rei_advancement": "This recipe hasn't been discovered yet.",
 
   "itemGroup.hallofween.hallofween": "Hall of Ween",
-  "itemGroup.hallofween.tot_bags": "Hall of Ween: Trick-or-Treat Bags",
+  "itemGroup.hallofween.containers": "Hall of Ween: Containers",
   "itemGroup.hallofween.discovery": "Hall of Ween: Recipe Sheets"
 }

@@ -82,4 +82,10 @@ public class RecipeSheetItem extends Item {
             list.add(stack);
         }
     }
+
+    public static ItemStack getSheetForItem(ItemStack stack) {
+        ItemStack sheet = new ItemStack(getItem("recipe_sheet"));
+        sheet.getOrCreateTag().putString("targetItem", Registry.ITEM.getId(stack.getItem()).toString());
+        return sheet;
+    }
 }

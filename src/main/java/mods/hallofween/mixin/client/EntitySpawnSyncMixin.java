@@ -15,17 +15,19 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.LocalCapture;
 
-//Imagine where our society would be if fapi merged this back in 1.15 when it was first written
 @Mixin(ClientPlayNetworkHandler.class)
 public abstract class EntitySpawnSyncMixin {
     @Shadow
     private ClientWorld world;
 
+    /**
+     * @reason Imagine where our society would be if fapi merged this back in 1.15 when it was first written
+     */
     @Inject(method = "onEntitySpawn", at = @At(value = "INVOKE_ASSIGN", target = "Lnet/minecraft/network/packet/s2c/play/EntitySpawnS2CPacket;getEntityTypeId()Lnet/minecraft/entity/EntityType;"),
             locals = LocalCapture.CAPTURE_FAILHARD, cancellable = true)
     public void handleEntitySpawnPacket(EntitySpawnS2CPacket packet, CallbackInfo ctx, double x, double y, double z, EntityType<?> type) {
         Identifier id = Registry.ENTITY_TYPE.getId(type);
-        if (id.getNamespace().equals(HallOfWeen.DEFAULTID.getNamespace())) {
+        if (id.getNamespace().equals(HallOfWeen.getModId())) {
             Entity entity = type.create(world);
             if (entity == null) {
                 ctx.cancel();
