@@ -1,7 +1,6 @@
 {
   "text.testificate.tooltip0": "The evil mobs have turned this Testificate into an item!",
   "text.testificate.tooltip1": "Put it on a block to release it from this predicament.",
-
   "text.testificate.plea0": "Get me out of here!",
   "text.testificate.plea1": "Let me go!",
   "text.testificate.plea2": "We didn't do anything wrong!",
@@ -11,7 +10,6 @@
   "text.testificate.plea6": "Help! Let me out!",
   "text.testificate.plea7": "Please, help me. I'm so weak.",
   "text.testificate.plea8": "Let me out of this prison. Please.",
-
   "text.testificate.freed0": "I didn't think we'd make it out.",
   "text.testificate.freed1": "Thank you... Thank you.",
   "text.testificate.freed2": "Everything...hurts.",
@@ -22,27 +20,20 @@
   "text.testificate.freed7": "I have no words. I'm so grateful. Thank you!",
   "text.testificate.freed8": "Thank you. Truly.",
   "text.testificate.freed9": "Thank you for your help.",
-
   "text.hallofween.xp": "+%d XP when consumed.",
   "text.hallofween.sugar_rush": "Sugar Rush!",
-
-  "text.hallofween.recipe_sheet":"Consume to learn the recipe for",
+  "text.hallofween.recipe_sheet": "Consume to learn the recipe for",
   "text.hallofween.recipe_sheet_empty": "This sheet is completely blank. Weird.",
-
   "block.hallofween.block_of_candy_corn": "Block of Candy Corn",
-
   "block.hallofween.candy_corn_cake": "Candy Corn Cake",
   "block.hallofween.soul_cake": "Soul Cake",
-
   "item.hallofween.testificate": "Captive Testificate",
-
   "item.hallofween.container": "Empty Container",
   "text.container.trick_or_treat_bag": "Trick-or-Treat Bag",
   "text.container.personalized_trick_or_treat_bag": "Personalized Trick-or-Treat Bag",
   "text.container.childs_trick_or_treat_bag": "Child's Trick-or-Treat Bag",
   "text.personalized_tot_bag.trick_a_tree": "§o§bSomeone stitched your name on this bag. What a nice gift.",
   "text.container.empty": "Somehow, this bag is empty. Our universe works in myserious ways.",
-
   "item.hallofween.candy_corn": "Candy Corn",
   "item.hallofween.candied_apple": "Candied Apple",
   "item.hallofween.candy_corn_custard": "Bowl of Candy Corn Custard",
@@ -59,19 +50,17 @@
   "item.hallofween.saint_bones": "Saint Bones",
   "item.hallofween.soul_pastry": "Soul Pastry",
   "item.hallofween.spicy_pumpkin_cookie": "Spicy Pumpkin Cookie",
-
   "item.hallofween.candy_corn_glaze": "Bowl of Candy Corn Glaze",
-
   "item.hallofween.rotten_egg": "Rotten Egg",
   "item.hallofween.toilet_paper": "Toilet Paper",
-
+  "item.hallofween.chattering_skull": "Chattering Skull",
+  "item.hallofween.nougat_center": "Nougat Center",
+  "item.hallofween.plastic_fangs": "Plastic Fangs",
+  "item.hallofween.old_pillowcase": "Old Pillowcase",
   "entity.hallofween.rotten_egg": "Rotten Egg",
   "entity.hallofween.toilet_paper": "Toilet Paper",
-
   "item.hallofween.recipe_sheet": "Recipe Sheet",
-  "text.hallofween.rei_adv_id": "Advancement: %d",
   "text.hallofween.rei_advancement": "This recipe hasn't been discovered yet.",
-
   "itemGroup.hallofween.hallofween": "Hall of Ween",
   "itemGroup.hallofween.containers": "Hall of Ween: Containers",
   "itemGroup.hallofween.discovery": "Hall of Ween: Recipe Sheets"

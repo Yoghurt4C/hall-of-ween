@@ -1,12 +1,24 @@
 {
   "type": "minecraft:crafting_shapeless",
   "ingredients": [
-    {"item":  "hallofween:candy_corn_cake_slice"},
-    {"item":  "hallofween:candy_corn_cake_slice"},
-    {"item":  "hallofween:candy_corn_cake_slice"},
-    {"item":  "hallofween:candy_corn_cake_slice"},
-    {"item":  "hallofween:candy_corn_cake_slice"},
-    {"item":  "hallofween:candy_corn_cake_slice"}
+    {
+      "item": "hallofween:candy_corn_cake_slice"
+    },
+    {
+      "item": "hallofween:candy_corn_cake_slice"
+    },
+    {
+      "item": "hallofween:candy_corn_cake_slice"
+    },
+    {
+      "item": "hallofween:candy_corn_cake_slice"
+    },
+    {
+      "item": "hallofween:candy_corn_cake_slice"
+    },
+    {
+      "item": "hallofween:candy_corn_cake_slice"
+    }
   ],
   "result": {
     "item": "hallofween:candy_corn_cake"

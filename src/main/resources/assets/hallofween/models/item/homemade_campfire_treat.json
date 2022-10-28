@@ -1,6 +1,6 @@
 {
-    "parent": "minecraft:item/generated",
-    "textures": {
-        "layer0": "hallofween:item/homemade_campfire_treat"
-    }
+  "parent": "minecraft:item/generated",
+  "textures": {
+    "layer0": "hallofween:item/homemade_campfire_treat"
+  }
 }

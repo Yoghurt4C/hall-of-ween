@@ -1,0 +1,18 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "ingredients": [
+    {
+      "item": "hallofween:chattering_skull"
+    },
+    {
+      "item": "hallofween:chattering_skull"
+    },
+    {
+      "item": "hallofween:chattering_skull"
+    }
+  ],
+  "result": {
+    "item": "minecraft:bone",
+    "count": 2
+  }
+}

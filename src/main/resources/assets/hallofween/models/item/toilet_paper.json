@@ -1,6 +1,6 @@
 {
-    "parent": "minecraft:item/generated",
-    "textures": {
-        "layer0": "hallofween:item/toilet_paper"
-    }
+  "parent": "minecraft:item/generated",
+  "textures": {
+    "layer0": "hallofween:item/toilet_paper"
+  }
 }

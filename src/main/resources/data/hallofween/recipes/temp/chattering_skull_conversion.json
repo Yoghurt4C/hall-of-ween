@@ -1,0 +1,24 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "ingredients": [
+    {
+      "item": "hallofween:candy_corn_glaze"
+    },
+    {
+      "item": "hallofween:nougat_center"
+    },
+    {
+      "item": "hallofween:nougat_center"
+    },
+    {
+      "item": "hallofween:plastic_fangs"
+    },
+    {
+      "item": "hallofween:plastic_fangs"
+    }
+  ],
+  "result": {
+    "item": "hallofween:chattering_skull",
+    "count": 3
+  }
+}

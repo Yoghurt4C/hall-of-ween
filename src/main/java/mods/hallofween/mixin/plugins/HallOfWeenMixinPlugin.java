@@ -1,6 +1,7 @@
 package mods.hallofween.mixin.plugins;
 
 import mods.hallofween.Config;
+import net.fabricmc.loader.api.FabricLoader;
 import org.objectweb.asm.tree.ClassNode;
 import org.spongepowered.asm.mixin.extensibility.IMixinConfigPlugin;
 import org.spongepowered.asm.mixin.extensibility.IMixinInfo;
@@ -27,6 +28,8 @@ public class HallOfWeenMixinPlugin implements IMixinConfigPlugin {
             return Config.enableDiscoveryRecipes;
         else if (parseFeature(mixin, "bags"))
             return Config.enableBagInventory;
+        else if (parseFeature(mixin, "compat/rei"))
+            return FabricLoader.getInstance().isModLoaded("roughlyenoughitems") && Config.enableREICompat;
         return true;
     }
 

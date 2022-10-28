@@ -1,26 +1,26 @@
 {
-    "parent": "hallofween:discovery/root",
-    "rewards": {
-        "recipes": [
-            "hallofween:homemade_campfire_treat"
-        ]
-    },
-    "criteria": {
-        "has_the_recipe": {
-            "trigger": "minecraft:consume_item",
-            "conditions": {
-                "item": {
-                    "items": [
-                        "hallofween:recipe_sheet"
-                    ],
-                    "nbt": "{targetItem: \"hallofween:homemade_campfire_treat\"}"
-                }
-            }
-        }
-    },
-    "requirements": [
-        [
-            "has_the_recipe"
-        ]
+  "parent": "hallofween:discovery/root",
+  "rewards": {
+    "recipes": [
+      "hallofween:homemade_campfire_treat"
     ]
+  },
+  "criteria": {
+    "has_the_recipe": {
+      "trigger": "minecraft:consume_item",
+      "conditions": {
+        "item": {
+          "items": [
+            "hallofween:recipe_sheet"
+          ],
+          "nbt": "{targetItem: \"hallofween:homemade_campfire_treat\"}"
+        }
+      }
+    }
+  },
+  "requirements": [
+    [
+      "has_the_recipe"
+    ]
+  ]
 }

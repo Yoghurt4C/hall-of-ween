@@ -4,9 +4,17 @@
   "tooltips": ["text.personalized_tot_bag.trick_a_tree"],
   "injection_predicates": [
     {
+      "ends_with": "wither",
+      "min_amount": 10
+    },
+    {
+      "ends_with": "ender_dragon",
+      "min_amount": 10
+    },
+    {
       "starts_with": "entities",
-      "max_amount": 1,
-      "chance": 0.1
+      "max_amount": 3,
+      "chance": 0.01
     }
   ]
 }

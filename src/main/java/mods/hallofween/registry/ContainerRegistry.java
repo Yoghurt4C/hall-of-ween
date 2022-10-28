@@ -1,6 +1,7 @@
 package mods.hallofween.registry;
 
 import com.google.gson.*;
+import it.unimi.dsi.fastutil.objects.Object2ObjectLinkedOpenHashMap;
 import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
 import mods.hallofween.Config;
 import mods.hallofween.HallOfWeen;
@@ -23,7 +24,7 @@ import static mods.hallofween.HallOfWeen.getItem;
 
 public class ContainerRegistry {
     public static Map<String, ContainerProperties> CONTAINERS = new Object2ObjectOpenHashMap<>();
-    public static Map<String, ContainerLootProperties> LOOT_PREDICATES = new Object2ObjectOpenHashMap<>();
+    public static Map<String, Map<Predicate<Identifier>, ContainerLootProperties>> LOOT_PREDICATES = new Object2ObjectOpenHashMap<>();
 
     public static void load(ResourceManager manager) {
         CONTAINERS.clear();
@@ -78,57 +79,57 @@ public class ContainerRegistry {
                         mC = e.getAsInt();
                 }
 
-                Predicate<Identifier> p = null;
-                int min = 1;
-                int max = 1;
-                float chance = 1f;
+                Map<Predicate<Identifier>, ContainerLootProperties> map = new Object2ObjectLinkedOpenHashMap<>();
                 if (json.has("injection_predicates")) {
                     JsonArray a = json.getAsJsonArray("injection_predicates");
                     for (JsonElement e : a) {
-                        Predicate<Identifier> p2 = null;
                         JsonObject obj = e.getAsJsonObject();
+                        Predicate<Identifier> p = null;
+                        int min = 1;
+                        int max = 1;
+                        float chance = 1f;
                         for (Map.Entry<String, JsonElement> kv : obj.entrySet()) {
-                            Predicate<Identifier> p3;
                             String v = kv.getValue().getAsString();
                             switch (kv.getKey()) {
                                 case "namespace":
-                                    p3 = s -> s.getNamespace().equals(v);
+                                    p = s -> s.getNamespace().equals(v);
                                     break;
                                 case "contains":
-                                    p3 = s -> s.getPath().contains(v);
+                                    p = s -> s.getPath().contains(v);
                                     break;
                                 case "negate_contains":
-                                    p3 = s -> !s.getPath().contains(v);
+                                    p = s -> !s.getPath().contains(v);
                                     break;
                                 case "starts_with":
-                                    p3 = s -> s.getPath().startsWith(v);
+                                    p = s -> s.getPath().startsWith(v);
                                     break;
                                 case "negate_starts_with":
-                                    p3 = s -> !s.getPath().startsWith(v);
+                                    p = s -> !s.getPath().startsWith(v);
                                     break;
                                 case "ends_with":
-                                    p3 = s -> s.getPath().endsWith(v);
+                                    p = s -> s.getPath().endsWith(v);
                                     break;
                                 case "negate_ends_with":
-                                    p3 = s -> !s.getPath().endsWith(v);
+                                    p = s -> !s.getPath().endsWith(v);
                                     break;
                                 case "min_amount":
                                     min = Integer.parseInt(v);
+                                    break;
                                 case "max_amount":
                                     max = Integer.parseInt(v);
+                                    break;
                                 case "chance":
                                     chance = MathHelper.clamp(Float.parseFloat(v), 0, 1);
+                                    break;
                                 default:
-                                    continue;
+                                    break;
                             }
-                            p2 = p2 == null ? p3 : p2.and(p3);
                         }
-                        if (p == null) p = p2;
-                        else if (p2 != null) p = p.or(p2);
+                        map.put(p, new ContainerLootProperties(min, Math.max(min, max), chance));
                     }
                 }
                 CONTAINERS.put(name, new ContainerProperties(display, modelId, bC, mC, tt));
-                LOOT_PREDICATES.put(name, new ContainerLootProperties(p, min, max, chance));
+                LOOT_PREDICATES.put(name, map);
             } catch (IOException e) {
                 HallOfWeen.L.error(e.getMessage());
             }
@@ -140,8 +141,8 @@ public class ContainerRegistry {
             ItemStack stack = new ItemStack(getItem("container"));
             ContainerProperties props = e.getValue();
             stack.getOrCreateTag().putString("bagId", e.getKey());
-            stack.getTag().putInt("bagColor", props.bagColor);
-            stack.getTag().putInt("overlayColor", props.overlayColor);
+            if (props.bagColor != 0xFFFFFF) stack.getTag().putInt("bagColor", props.bagColor);
+            if (props.overlayColor != 0xFFFFFF) stack.getTag().putInt("overlayColor", props.overlayColor);
             list.add(stack);
         }
     }
@@ -163,12 +164,10 @@ public class ContainerRegistry {
     }
 
     public static class ContainerLootProperties {
-        public Predicate<Identifier> predicate;
         public int min, max;
         public float chance;
 
-        public ContainerLootProperties(Predicate<Identifier> p, int min, int max, float chance) {
-            this.predicate = p;
+        public ContainerLootProperties(int min, int max, float chance) {
             this.min = min;
             this.max = max;
             this.chance = chance;

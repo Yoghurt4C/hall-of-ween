@@ -1,13 +1,27 @@
 {
   "type": "minecraft:crafting_shapeless",
   "ingredients": [
-    {"item": "minecraft:bowl"},
-    {"item": "minecraft:sugar"},
-    {"item": "hallofween:candy_corn"},
-    {"item": "hallofween:candy_corn"},
-    {"item": "hallofween:candy_corn"},
-    {"item": "hallofween:candy_corn"},
-    {"item": "hallofween:candy_corn"}
+    {
+      "item": "minecraft:bowl"
+    },
+    {
+      "item": "minecraft:sugar"
+    },
+    {
+      "item": "hallofween:candy_corn"
+    },
+    {
+      "item": "hallofween:candy_corn"
+    },
+    {
+      "item": "hallofween:candy_corn"
+    },
+    {
+      "item": "hallofween:candy_corn"
+    },
+    {
+      "item": "hallofween:candy_corn"
+    }
   ],
   "result": {
     "item": "hallofween:candy_corn_glaze"

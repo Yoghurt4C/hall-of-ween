@@ -1,0 +1,17 @@
+{
+  "name": "text.container.childs_trick_or_treat_bag",
+  "model": "hallofween:childs_trick_or_treat_bag",
+  "bagColor": "0xE3901D",
+  "overlayColor": "0x5E7140",
+  "injection_predicates": [
+    {
+      "starts_with": "gameplay/hero_of_the_village",
+      "ends_with": "_gift",
+      "max_amount": 5
+    },
+    {
+      "starts_with": "entities",
+      "chance": 0.1
+    }
+  ]
+}

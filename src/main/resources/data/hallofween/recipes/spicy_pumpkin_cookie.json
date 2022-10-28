@@ -1,28 +1,28 @@
 {
-    "type": "minecraft:crafting_shapeless",
-    "ingredients": [
-        {
-            "item": "minecraft:pumpkin"
-        },
-        {
-            "item": "minecraft:sugar"
-        },
-        {
-            "item": "minecraft:egg"
-        },
-        {
-            "item": "minecraft:blaze_powder"
-        },
-        {
-            "item": "hallofween:candy_corn_glaze"
-        },
-        {
-            "item": "hallofween:candy_corn_glaze"
-        }
-    ],
-    "result": {
-        "item": "hallofween:spicy_pumpkin_cookie",
-        "count": 3
+  "type": "minecraft:crafting_shapeless",
+  "ingredients": [
+    {
+      "item": "minecraft:pumpkin"
     },
-    "advancement": "hallofween:discovery/candy_corn/spicy_pumpkin_cookie"
+    {
+      "item": "minecraft:sugar"
+    },
+    {
+      "item": "minecraft:egg"
+    },
+    {
+      "item": "minecraft:blaze_powder"
+    },
+    {
+      "item": "hallofween:candy_corn_glaze"
+    },
+    {
+      "item": "hallofween:candy_corn_glaze"
+    }
+  ],
+  "result": {
+    "item": "hallofween:spicy_pumpkin_cookie",
+    "count": 3
+  },
+  "advancement": "hallofween:discovery/candy_corn/spicy_pumpkin_cookie"
 }

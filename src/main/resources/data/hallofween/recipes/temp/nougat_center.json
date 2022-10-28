@@ -1,0 +1,18 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "ingredients": [
+    {
+      "item": "hallofween:nougat_center"
+    },
+    {
+      "item": "hallofween:nougat_center"
+    },
+    {
+      "item": "hallofween:nougat_center"
+    }
+  ],
+  "result": {
+    "item": "minecraft:gunpowder",
+    "count": 2
+  }
+}

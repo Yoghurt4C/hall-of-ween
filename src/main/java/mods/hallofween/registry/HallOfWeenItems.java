@@ -28,10 +28,8 @@ import static net.minecraft.entity.effect.StatusEffects.*;
 
 public class HallOfWeenItems {
     public static void init() {
-        Item.Settings ds = new FabricItemSettings().group(ITEMGROUP);
-        register("testificate", new TestificateItem(new FabricItemSettings().maxCount(1).group(ITEMGROUP).equipmentSlot(stack -> EquipmentSlot.HEAD)));
+        register("testificate", new TestificateItem(generic().maxCount(1).equipmentSlot(stack -> EquipmentSlot.HEAD)));
 
-        //register("trick_or_treat_bag", new TrickOrTreatBagItem(ds));
         register("container", new ContainerItem());
 
         register("candy_corn", new SpookyFoodItem(1, spook(1, 0.1f).snack()) {
@@ -56,6 +54,10 @@ public class HallOfWeenItems {
             }
         });
 
+        register("chattering_skull", new Item(generic()));
+        register("nougat_center", new Item(generic()));
+        register("plastic_fangs", new Item(generic()));
+
         register("candied_apple", new SpookyFoodItem(3, spook(3, 0.3f, HASTE, 200, 0, 0.75f)));
         register("candy_corn_custard", new SpookyFoodItem(5, spook(5, 0.45f, REGENERATION, 200, 0, 1f)));
         register("candy_corn_cake_slice", new SpookyFoodItem(2, spook(2, 0.12f, LUCK, 200, 0, 1f)));
@@ -72,12 +74,16 @@ public class HallOfWeenItems {
         register("soul_pastry", new SpookyFoodItem(5, spook(4, 0.23f, GLOWING, 200, 0, 0.75f)));
         register("spicy_pumpkin_cookie", new SpookyFoodItem(6, spook(3, 0.21f, FIRE_RESISTANCE, 600, 0, 1f)));
 
-        register("candy_corn_glaze", new Item(new FabricItemSettings().group(ITEMGROUP).recipeRemainder(Items.BOWL)));
+        register("candy_corn_glaze", new Item(generic().recipeRemainder(Items.BOWL)));
 
         register("rotten_egg", new ThrownSpookyItem(ThrownRottenEgg::new));
         register("toilet_paper", new ThrownSpookyItem(ThrownToiletPaper::new));
 
         register("recipe_sheet", new RecipeSheetItem(new FabricItemSettings().food(new FoodComponent.Builder().alwaysEdible().snack().build())));
+    }
+
+    private static FabricItemSettings generic() {
+        return new FabricItemSettings().group(ITEMGROUP);
     }
 
     private static void register(String id, Item item) {

@@ -22,6 +22,7 @@ public abstract class EntitySpawnSyncMixin {
 
     /**
      * @reason Imagine where our society would be if fapi merged this back in 1.15 when it was first written
+     * The LVT errors out in IDEA if you have MCDev. Works fine in prod.
      */
     @Inject(method = "onEntitySpawn", at = @At(value = "INVOKE_ASSIGN", target = "Lnet/minecraft/network/packet/s2c/play/EntitySpawnS2CPacket;getEntityTypeId()Lnet/minecraft/entity/EntityType;"),
             locals = LocalCapture.CAPTURE_FAILHARD, cancellable = true)

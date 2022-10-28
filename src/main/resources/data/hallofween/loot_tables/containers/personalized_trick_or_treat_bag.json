@@ -85,7 +85,6 @@
           "weight": 33,
           "name": "hallofween:spicy_pumpkin_cookie"
         },
-
         {
           "type": "minecraft:item",
           "weight": 5,
@@ -112,7 +111,6 @@
           "weight": 81,
           "name": "hallofween:candied_apple"
         },
-
         {
           "type": "minecraft:item",
           "weight": 5,
@@ -385,6 +383,18 @@
           "weight": 3,
           "quality": 2,
           "name": "minecraft:slime_ball"
+        },
+        {
+          "type": "minecraft:item",
+          "weight": 3,
+          "quality": 2,
+          "name": "minecraft:honeycomb"
+        },
+        {
+          "type": "minecraft:item",
+          "weight": 2,
+          "quality": 2,
+          "name": "minecraft:nether_wart"
         },
         {
           "type": "minecraft:item",

@@ -9,6 +9,7 @@ import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.Element;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.item.ItemStack;
+import net.minecraft.text.LiteralText;
 import net.minecraft.text.Text;
 import net.minecraft.text.TranslatableText;
 import net.minecraft.util.Formatting;
@@ -50,7 +51,8 @@ public class SheetWidget extends WidgetWithBounds {
             List<Text> tt = new ArrayList<>();
             tt.add(sheet.getName());
             if (mc.options.advancedItemTooltips)
-                tt.add(new TranslatableText("text.hallofween.rei_adv_id", advId.toString()).formatted(Formatting.GRAY));
+
+                tt.add(new LiteralText(advId.toString()).formatted(Formatting.DARK_GRAY));
             if (noAdv)
                 tt.add(new TranslatableText("text.hallofween.rei_advancement").formatted(Formatting.RED, Formatting.BOLD));
             MinecraftClient.getInstance().currentScreen.renderTooltip(matrices, tt, mouseX, mouseY);

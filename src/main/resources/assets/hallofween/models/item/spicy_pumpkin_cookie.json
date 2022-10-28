@@ -1,6 +1,6 @@
 {
-    "parent": "minecraft:item/generated",
-    "textures": {
-        "layer0": "hallofween:item/spicy_pumpkin_cookie"
-    }
+  "parent": "minecraft:item/generated",
+  "textures": {
+    "layer0": "hallofween:item/spicy_pumpkin_cookie"
+  }
 }

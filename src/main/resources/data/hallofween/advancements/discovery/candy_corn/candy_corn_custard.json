@@ -1,26 +1,26 @@
 {
-    "parent": "hallofween:discovery/root",
-    "rewards": {
-        "recipes": [
-            "hallofween:candy_corn_custard"
-        ]
-    },
-    "criteria": {
-        "has_the_recipe": {
-            "trigger": "minecraft:consume_item",
-            "conditions": {
-                "item": {
-                    "items": [
-                        "hallofween:recipe_sheet"
-                    ],
-                    "nbt": "{targetItem: \"hallofween:candy_corn_custard\"}"
-                }
-            }
-        }
-    },
-    "requirements": [
-        [
-            "has_the_recipe"
-        ]
+  "parent": "hallofween:discovery/root",
+  "rewards": {
+    "recipes": [
+      "hallofween:candy_corn_custard"
     ]
+  },
+  "criteria": {
+    "has_the_recipe": {
+      "trigger": "minecraft:consume_item",
+      "conditions": {
+        "item": {
+          "items": [
+            "hallofween:recipe_sheet"
+          ],
+          "nbt": "{targetItem: \"hallofween:candy_corn_custard\"}"
+        }
+      }
+    }
+  },
+  "requirements": [
+    [
+      "has_the_recipe"
+    ]
+  ]
 }

@@ -1,6 +1,6 @@
 {
-    "parent": "minecraft:item/generated",
-    "textures": {
-        "layer0": "hallofween:item/glazed_peach_tart"
-    }
+  "parent": "minecraft:item/generated",
+  "textures": {
+    "layer0": "hallofween:item/glazed_peach_tart"
+  }
 }

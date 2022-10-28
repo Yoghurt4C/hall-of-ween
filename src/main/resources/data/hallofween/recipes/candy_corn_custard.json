@@ -1,24 +1,24 @@
 {
-    "type": "minecraft:crafting_shapeless",
-    "ingredients": [
-        {
-            "item": "minecraft:egg"
-        },
-        {
-            "item": "hallofween:candy_corn"
-        },
-        {
-            "item": "hallofween:candy_corn"
-        },
-        {
-            "item": "hallofween:candy_corn"
-        },
-        {
-            "item": "minecraft:milk_bucket"
-        }
-    ],
-    "result": {
-        "item": "hallofween:candy_corn_custard"
+  "type": "minecraft:crafting_shapeless",
+  "ingredients": [
+    {
+      "item": "minecraft:egg"
     },
-    "advancement": "hallofween:discovery/candy_corn/candy_corn_custard"
+    {
+      "item": "hallofween:candy_corn"
+    },
+    {
+      "item": "hallofween:candy_corn"
+    },
+    {
+      "item": "hallofween:candy_corn"
+    },
+    {
+      "item": "minecraft:milk_bucket"
+    }
+  ],
+  "result": {
+    "item": "hallofween:candy_corn_custard"
+  },
+  "advancement": "hallofween:discovery/candy_corn/candy_corn_custard"
 }

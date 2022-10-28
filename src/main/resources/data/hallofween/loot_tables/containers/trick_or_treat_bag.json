@@ -1,0 +1,132 @@
+{
+  "type": "minecraft:barter",
+  "pools": [
+    {
+      "rolls": 4,
+      "entries": [
+        {
+          "type": "minecraft:item",
+          "weight": 594,
+          "functions": [
+            {
+              "function": "minecraft:set_count",
+              "count": 2
+            }
+          ],
+          "name": "hallofween:candy_corn"
+        },
+        {
+          "type": "minecraft:item",
+          "weight": 111,
+          "functions": [
+            {
+              "function": "minecraft:set_count",
+              "count": {
+                "min": 1,
+                "max": 2,
+                "type": "minecraft:uniform"
+              }
+            }
+          ],
+          "name": "hallofween:chattering_skull"
+        },
+        {
+          "type": "minecraft:item",
+          "weight": 20,
+          "functions": [
+            {
+              "function": "minecraft:set_count",
+              "count": 6
+            }
+          ],
+          "name": "hallofween:chattering_skull"
+        },
+        {
+          "type": "minecraft:item",
+          "weight": 110,
+          "functions": [
+            {
+              "function": "minecraft:set_count",
+              "count": {
+                "min": 1,
+                "max": 2,
+                "type": "minecraft:uniform"
+              }
+            }
+          ],
+          "name": "hallofween:nougat_center"
+        },
+        {
+          "type": "minecraft:item",
+          "weight": 18,
+          "functions": [
+            {
+              "function": "minecraft:set_count",
+              "count": 6
+            }
+          ],
+          "name": "hallofween:nougat_center"
+        },
+        {
+          "type": "minecraft:item",
+          "weight": 116,
+          "functions": [
+            {
+              "function": "minecraft:set_count",
+              "count": {
+                "min": 1,
+                "max": 2,
+                "type": "minecraft:uniform"
+              }
+            }
+          ],
+          "name": "hallofween:plastic_fangs"
+        },
+        {
+          "type": "minecraft:item",
+          "weight": 19,
+          "functions": [
+            {
+              "function": "minecraft:set_count",
+              "count": 6
+            }
+          ],
+          "name": "hallofween:plastic_fangs"
+        },
+        {
+          "type": "minecraft:item",
+          "weight": 1,
+          "name": "hallofween:rotten_egg"
+        },
+        {
+          "type": "minecraft:item",
+          "weight": 1,
+          "name": "hallofween:toilet_paper"
+        },
+        {
+          "type": "minecraft:item",
+          "weight": 2,
+          "name": "hallofween:soul_pastry"
+        },
+        {
+          "type": "minecraft:item",
+          "weight": 1,
+          "quality": 2,
+          "name": "minecraft:clay_ball"
+        },
+        {
+          "type": "minecraft:item",
+          "weight": 1,
+          "quality": 2,
+          "name": "minecraft:honeycomb"
+        },
+        {
+          "type": "minecraft:item",
+          "weight": 1,
+          "quality": 2,
+          "name": "minecraft:pumpkin_seeds"
+        }
+      ]
+    }
+  ]
+}

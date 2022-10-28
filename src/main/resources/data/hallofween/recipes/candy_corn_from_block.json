@@ -1,12 +1,12 @@
 {
-    "type": "minecraft:crafting_shapeless",
-    "ingredients": [
-        {
-            "item": "hallofween:block_of_candy_corn"
-        }
-    ],
-    "result": {
-        "item": "hallofween:candy_corn",
-        "count": 9
+  "type": "minecraft:crafting_shapeless",
+  "ingredients": [
+    {
+      "item": "hallofween:block_of_candy_corn"
     }
+  ],
+  "result": {
+    "item": "hallofween:candy_corn",
+    "count": 9
+  }
 }

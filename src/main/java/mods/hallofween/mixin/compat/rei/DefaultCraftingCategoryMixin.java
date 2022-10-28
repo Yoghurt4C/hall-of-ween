@@ -30,7 +30,7 @@ public abstract class DefaultCraftingCategoryMixin {
                 if (advId == null) return;
                 MinecraftClient mc = MinecraftClient.getInstance();
                 Advancement adv = mc.getNetworkHandler().getAdvancementHandler().getManager().get(advId);
-                widgets.add(new SheetWidget(startPoint, display.getOutputEntries().get(0).getItemStack(), advId, adv == null));
+                widgets.add(new SheetWidget(startPoint, display.getResultingEntries().get(0).get(0).getItemStack(), advId, adv == null));
             }
         }
     }

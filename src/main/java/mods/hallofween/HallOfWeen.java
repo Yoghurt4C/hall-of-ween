@@ -70,23 +70,30 @@ public class HallOfWeen implements ModInitializer {
 
         if (Config.injectLootContainers) {
             LootTableLoadingCallback.EVENT.register((resourceManager, manager, id, supplier, setter) -> {
-                for (Map.Entry<String, ContainerLootProperties> e : ContainerRegistry.LOOT_PREDICATES.entrySet()) {
-                    Predicate<Identifier> p = e.getValue().predicate;
-                    if (p.test(id)) {
-                        String name = e.getKey();
-                        ContainerProperties props = ContainerRegistry.CONTAINERS.get(name);
-                        ContainerLootProperties lootProps = e.getValue();
-                        CompoundTag tag = new CompoundTag();
-                        tag.putString("bagId", name);
-                        tag.putInt("bagColor", props.bagColor);
-                        tag.putInt("overlayColor", props.overlayColor);
-                        FabricLootPoolBuilder b = FabricLootPoolBuilder.builder()
-                                .rolls(ConstantLootTableRange.create(1))
-                                .with(ItemEntry.builder(getItem("container")))
-                                .withFunction(SetNbtLootFunction.builder(tag).build())
-                                .withFunction(SetCountLootFunction.builder(UniformLootTableRange.between(lootProps.min, lootProps.max)).build())
-                                .withCondition(RandomChanceLootCondition.builder(lootProps.chance).build());
-                        supplier.withPool(b.build());
+                for (Map.Entry<String, Map<Predicate<Identifier>, ContainerLootProperties>> e : ContainerRegistry.LOOT_PREDICATES.entrySet()) {
+                    for (Map.Entry<Predicate<Identifier>, ContainerLootProperties> in : e.getValue().entrySet()) {
+                        Predicate<Identifier> p = in.getKey();
+                        if (p.test(id)) {
+                            String name = e.getKey();
+                            ContainerProperties props = ContainerRegistry.CONTAINERS.get(name);
+                            ContainerLootProperties lootProps = in.getValue();
+                            CompoundTag tag = new CompoundTag();
+                            tag.putString("bagId", name);
+                            if (props.bagColor != 0xFFFFFF) tag.putInt("bagColor", props.bagColor);
+                            if (props.overlayColor != 0xFFFFFF) tag.putInt("overlayColor", props.overlayColor);
+                            FabricLootPoolBuilder b = FabricLootPoolBuilder.builder()
+                                    .rolls(ConstantLootTableRange.create(1))
+                                    .with(ItemEntry.builder(getItem("container")))
+                                    .withFunction(SetNbtLootFunction.builder(tag).build())
+                                    .withFunction(lootProps.min == lootProps.max
+                                            ? SetCountLootFunction.builder(ConstantLootTableRange.create(lootProps.min)).build()
+                                            : SetCountLootFunction.builder(UniformLootTableRange.between(lootProps.min, lootProps.max)).build()
+                                    );
+                            if (lootProps.chance < 1f)
+                                b.withCondition(RandomChanceLootCondition.builder(lootProps.chance).build());
+                            supplier.withPool(b.build());
+                            break;
+                        }
                     }
                 }
             });

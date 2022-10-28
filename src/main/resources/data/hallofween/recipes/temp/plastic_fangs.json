@@ -1,0 +1,18 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "ingredients": [
+    {
+      "item": "hallofween:plastic_fangs"
+    },
+    {
+      "item": "hallofween:plastic_fangs"
+    },
+    {
+      "item": "hallofween:plastic_fangs"
+    }
+  ],
+  "result": {
+    "item": "minecraft:string",
+    "count": 2
+  }
+}

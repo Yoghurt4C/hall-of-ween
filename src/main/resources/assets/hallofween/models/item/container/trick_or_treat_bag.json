@@ -1,7 +1,7 @@
 {
-    "parent": "minecraft:item/generated",
-    "textures": {
-        "layer0": "hallofween:item/container/trick_or_treat_bag",
-        "layer1": "hallofween:item/container/trick_or_treat_bag_overlay"
-    }
+  "parent": "minecraft:item/generated",
+  "textures": {
+    "layer0": "hallofween:item/container/trick_or_treat_bag",
+    "layer1": "hallofween:item/container/trick_or_treat_bag_overlay"
+  }
 }
