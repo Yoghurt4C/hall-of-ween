@@ -118,7 +118,7 @@
           "functions": [
             {
               "function": "minecraft:set_nbt",
-              "tag": "{targetItem: \"hallofween:candied_applie\"}"
+              "tag": "{targetItem: \"hallofween:candied_apple\"}"
             }
           ]
         },

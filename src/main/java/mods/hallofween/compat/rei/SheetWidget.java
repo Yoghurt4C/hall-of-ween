@@ -3,7 +3,6 @@ package mods.hallofween.compat.rei;
 import me.shedaniel.math.Point;
 import me.shedaniel.math.Rectangle;
 import me.shedaniel.rei.gui.widget.WidgetWithBounds;
-import mods.hallofween.HallOfWeen;
 import mods.hallofween.item.RecipeSheetItem;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.Element;
@@ -20,8 +19,10 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import static mods.hallofween.util.HallOfWeenUtil.getId;
+
 public class SheetWidget extends WidgetWithBounds {
-    private static final Identifier INDICATOR = HallOfWeen.getId("textures/gui/sheet_indicator.png");
+    private static final Identifier INDICATOR = getId("textures/gui/sheet_indicator.png");
     private final Rectangle bounds;
     private final Point point;
     private final ItemStack sheet;

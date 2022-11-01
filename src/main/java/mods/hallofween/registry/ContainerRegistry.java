@@ -4,7 +4,6 @@ import com.google.gson.*;
 import it.unimi.dsi.fastutil.objects.Object2ObjectLinkedOpenHashMap;
 import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
 import mods.hallofween.Config;
-import mods.hallofween.HallOfWeen;
 import net.minecraft.item.ItemStack;
 import net.minecraft.resource.ResourceManager;
 import net.minecraft.util.Identifier;
@@ -20,7 +19,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.function.Predicate;
 
-import static mods.hallofween.HallOfWeen.getItem;
+import static mods.hallofween.util.HallOfWeenUtil.L;
+import static mods.hallofween.util.HallOfWeenUtil.getItem;
 
 public class ContainerRegistry {
     public static Map<String, ContainerProperties> CONTAINERS = new Object2ObjectOpenHashMap<>();
@@ -131,7 +131,7 @@ public class ContainerRegistry {
                 CONTAINERS.put(name, new ContainerProperties(display, modelId, bC, mC, tt));
                 LOOT_PREDICATES.put(name, map);
             } catch (IOException e) {
-                HallOfWeen.L.error(e.getMessage());
+                L.error(e.getMessage());
             }
         }
     }

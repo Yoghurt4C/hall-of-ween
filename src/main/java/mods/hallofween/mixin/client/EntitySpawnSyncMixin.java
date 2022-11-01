@@ -1,6 +1,5 @@
 package mods.hallofween.mixin.client;
 
-import mods.hallofween.HallOfWeen;
 import net.minecraft.client.network.ClientPlayNetworkHandler;
 import net.minecraft.client.world.ClientWorld;
 import net.minecraft.entity.Entity;
@@ -15,6 +14,8 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.LocalCapture;
 
+import static mods.hallofween.util.HallOfWeenUtil.getModId;
+
 @Mixin(ClientPlayNetworkHandler.class)
 public abstract class EntitySpawnSyncMixin {
     @Shadow
@@ -28,7 +29,7 @@ public abstract class EntitySpawnSyncMixin {
             locals = LocalCapture.CAPTURE_FAILHARD, cancellable = true)
     public void handleEntitySpawnPacket(EntitySpawnS2CPacket packet, CallbackInfo ctx, double x, double y, double z, EntityType<?> type) {
         Identifier id = Registry.ENTITY_TYPE.getId(type);
-        if (id.getNamespace().equals(HallOfWeen.getModId())) {
+        if (id.getNamespace().equals(getModId())) {
             Entity entity = type.create(world);
             if (entity == null) {
                 ctx.cancel();

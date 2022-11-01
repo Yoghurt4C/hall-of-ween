@@ -14,6 +14,8 @@ import net.minecraft.sound.BlockSoundGroup;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.registry.Registry;
 
+import static mods.hallofween.util.HallOfWeenUtil.getId;
+
 public class HallOfWeenBlocks {
     public static void init() {
         register("block_of_candy_corn", new Block(FabricBlockSettings.of(Material.STONE, MaterialColor.ORANGE).requiresTool().strength(1.25f, 5f).sounds(BlockSoundGroup.STONE)), 64);
@@ -24,7 +26,7 @@ public class HallOfWeenBlocks {
     }
 
     private static void register(String id, Block block, int stackSize) {
-        Identifier Id = HallOfWeen.getId(id);
+        Identifier Id = getId(id);
         Registry.register(Registry.ITEM, Id, new BlockItem(Registry.register(Registry.BLOCK, Id, block), new FabricItemSettings().group(HallOfWeen.ITEMGROUP).maxCount(stackSize)));
     }
 }

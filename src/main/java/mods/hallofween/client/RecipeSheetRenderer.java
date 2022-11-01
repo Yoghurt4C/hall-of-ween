@@ -2,7 +2,6 @@ package mods.hallofween.client;
 
 import com.mojang.blaze3d.systems.RenderSystem;
 import mods.hallofween.Config;
-import mods.hallofween.HallOfWeen;
 import mods.hallofween.mixin.client.ItemRendererAccessor;
 import net.fabricmc.fabric.api.client.rendering.v1.BuiltinItemRendererRegistry;
 import net.minecraft.client.MinecraftClient;
@@ -22,9 +21,11 @@ import net.minecraft.util.math.Matrix4f;
 import net.minecraft.util.math.Quaternion;
 import net.minecraft.util.registry.Registry;
 
+import static mods.hallofween.util.HallOfWeenUtil.getId;
+
 public class RecipeSheetRenderer implements BuiltinItemRendererRegistry.DynamicItemRenderer {
 
-    private final ModelIdentifier sheetModel = new ModelIdentifier(HallOfWeen.getId("recipe_sheet_base"), "inventory");
+    private final ModelIdentifier sheetModel = new ModelIdentifier(getId("recipe_sheet_base"), "inventory");
 
     @Override
     public void render(ItemStack stack, Mode mode, MatrixStack matrices, VertexConsumerProvider vertexConsumers, int light, int overlay) {

@@ -1,6 +1,6 @@
 package mods.hallofween.item;
 
-import mods.hallofween.HallOfWeen;
+import mods.hallofween.util.HallOfWeenUtil;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.item.v1.FabricItemSettings;
@@ -50,7 +50,7 @@ public class ContainerItem extends Item {
                 String id = stack.getTag().getString("bagId");
                 if (CONTAINERS.containsKey(id)) {
                     ContainerProperties bp = CONTAINERS.get(id);
-                    Identifier identifier = HallOfWeen.getId("containers/" + id);
+                    Identifier identifier = HallOfWeenUtil.getId("containers/" + id);
                     LootTable lootTable = world.getServer().getLootManager().getTable(identifier);
                     if (lootTable != LootTable.EMPTY) {
                         LootContext ctx = new LootContext.Builder(world)
@@ -107,7 +107,7 @@ public class ContainerItem extends Item {
     }
 
     public static ItemStack getDefaultContainer() {
-        ItemStack stack = new ItemStack(HallOfWeen.getItem("container"));
+        ItemStack stack = new ItemStack(HallOfWeenUtil.getItem("container"));
         stack.getOrCreateTag().putString("bagId", "trick_or_treat_bag");
         stack.getTag().putInt("bagColor", 0xE3901D);
         stack.getTag().putInt("overlayColor", 0x9F3C9F);

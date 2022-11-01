@@ -1,6 +1,5 @@
 package mods.hallofween.entity;
 
-import mods.hallofween.HallOfWeen;
 import mods.hallofween.registry.HallOfWeenEntities;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;
@@ -10,6 +9,8 @@ import net.minecraft.item.Item;
 import net.minecraft.util.hit.EntityHitResult;
 import net.minecraft.util.registry.Registry;
 import net.minecraft.world.World;
+
+import static mods.hallofween.util.HallOfWeenUtil.getId;
 
 @SuppressWarnings("unchecked")
 public class ThrownToiletPaper extends SpookyThrowable {
@@ -27,7 +28,7 @@ public class ThrownToiletPaper extends SpookyThrowable {
 
     @Override
     protected Item getDefaultItem() {
-        return Registry.ITEM.get(HallOfWeen.getId("toilet_paper"));
+        return Registry.ITEM.get(getId("toilet_paper"));
     }
 
     @Override

@@ -23,7 +23,7 @@ import org.jetbrains.annotations.Nullable;
 import java.util.List;
 
 import static mods.hallofween.HallOfWeen.ITEMGROUP;
-import static mods.hallofween.HallOfWeen.getId;
+import static mods.hallofween.util.HallOfWeenUtil.getId;
 import static net.minecraft.entity.effect.StatusEffects.*;
 
 public class HallOfWeenItems {

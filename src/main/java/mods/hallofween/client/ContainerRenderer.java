@@ -1,6 +1,5 @@
 package mods.hallofween.client;
 
-import mods.hallofween.HallOfWeen;
 import mods.hallofween.mixin.client.ItemRendererAccessor;
 import net.fabricmc.fabric.api.client.rendering.v1.BuiltinItemRendererRegistry;
 import net.minecraft.client.MinecraftClient;
@@ -15,9 +14,10 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundTag;
 
 import static mods.hallofween.registry.ContainerRegistry.CONTAINERS;
+import static mods.hallofween.util.HallOfWeenUtil.getId;
 
 public class ContainerRenderer implements BuiltinItemRendererRegistry.DynamicItemRenderer {
-    public final ModelIdentifier MISSINGNO = new ModelIdentifier(HallOfWeen.getId("container/missingno"), "inventory");
+    public final ModelIdentifier MISSINGNO = new ModelIdentifier(getId("container/missingno"), "inventory");
 
     @Override
     public void render(ItemStack stack, ModelTransformation.Mode mode, MatrixStack matrices, VertexConsumerProvider vertexConsumers, int light, int overlay) {

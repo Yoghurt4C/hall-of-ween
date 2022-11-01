@@ -2,7 +2,6 @@ package mods.hallofween.client;
 
 import me.shedaniel.cloth.api.client.events.v0.ClothClientHooks;
 import mods.hallofween.Config;
-import mods.hallofween.HallOfWeen;
 import mods.hallofween.client.bags.BagHandler;
 import mods.hallofween.client.bags.BagWidget;
 import mods.hallofween.entity.ThrownRottenEgg;
@@ -23,14 +22,15 @@ import net.minecraft.util.Identifier;
 
 import java.util.Collection;
 
-import static mods.hallofween.HallOfWeen.getId;
+import static mods.hallofween.util.HallOfWeenUtil.getId;
+import static mods.hallofween.util.HallOfWeenUtil.getItem;
 
 public class HallOfWeenClient implements ClientModInitializer {
     @Override
     public void onInitializeClient() {
-        BuiltinItemRendererRegistry.INSTANCE.register(HallOfWeen.getItem("testificate"), new TestificateRenderer());
+        BuiltinItemRendererRegistry.INSTANCE.register(getItem("testificate"), new TestificateRenderer());
 
-        ColorProviderRegistry.ITEM.register(ContainerItem::getColor, HallOfWeen.getItem("container"));
+        ColorProviderRegistry.ITEM.register(ContainerItem::getColor, getItem("container"));
         ModelLoadingRegistry.INSTANCE.registerModelProvider(((manager, out) -> {
             Collection<Identifier> models = manager.findResources("models/item/container", s -> s.endsWith(".json"));
             for (Identifier model : models) {
@@ -41,7 +41,7 @@ public class HallOfWeenClient implements ClientModInitializer {
                 out.accept(id);
             }
         }));
-        BuiltinItemRendererRegistry.INSTANCE.register(HallOfWeen.getItem("container"), new ContainerRenderer());
+        BuiltinItemRendererRegistry.INSTANCE.register(getItem("container"), new ContainerRenderer());
         HallOfWeenNetworking.initClient();
 
         EntityRendererRegistry.INSTANCE.register(HallOfWeenEntities.ROTTEN_EGG, (
@@ -50,7 +50,7 @@ public class HallOfWeenClient implements ClientModInitializer {
                 (erd, ctx) -> new FlyingItemEntityRenderer<ThrownToiletPaper>(erd, ctx.getItemRenderer())));
 
         ModelLoadingRegistry.INSTANCE.registerModelProvider((manager, out) -> out.accept(new ModelIdentifier(getId("recipe_sheet_base"), "inventory")));
-        BuiltinItemRendererRegistry.INSTANCE.register(HallOfWeen.getItem("recipe_sheet"), new RecipeSheetRenderer());
+        BuiltinItemRendererRegistry.INSTANCE.register(getItem("recipe_sheet"), new RecipeSheetRenderer());
 
         //todo
         if (Config.enableBagInventory) {

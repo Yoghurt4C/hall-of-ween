@@ -23,7 +23,7 @@ import org.jetbrains.annotations.Nullable;
 import java.util.List;
 
 import static mods.hallofween.HallOfWeen.DISCOVERY;
-import static mods.hallofween.HallOfWeen.getItem;
+import static mods.hallofween.util.HallOfWeenUtil.getItem;
 
 public class RecipeSheetItem extends Item {
     public RecipeSheetItem(Settings settings) {

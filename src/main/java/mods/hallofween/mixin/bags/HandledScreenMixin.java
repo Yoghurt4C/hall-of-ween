@@ -1,7 +1,6 @@
 package mods.hallofween.mixin.bags;
 
 import com.mojang.blaze3d.systems.RenderSystem;
-import mods.hallofween.HallOfWeen;
 import mods.hallofween.bags.BagHolder;
 import mods.hallofween.bags.BagInventory;
 import net.minecraft.client.gui.screen.Screen;
@@ -26,6 +25,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 import java.util.ArrayList;
 
 import static mods.hallofween.client.bags.BagHandler.*;
+import static mods.hallofween.util.HallOfWeenUtil.getId;
 
 @Mixin(HandledScreen.class)
 public abstract class HandledScreenMixin<T extends ScreenHandler> extends Screen implements ScreenHandlerProvider<T> {
@@ -47,7 +47,7 @@ public abstract class HandledScreenMixin<T extends ScreenHandler> extends Screen
     @Nullable
     protected Slot focusedSlot;
     @Unique
-    private final Identifier GUI = HallOfWeen.getId("textures/gui/bags.png");
+    private final Identifier GUI = getId("textures/gui/bags.png");
     @Unique
     private final int bagW = 218;
     @Unique

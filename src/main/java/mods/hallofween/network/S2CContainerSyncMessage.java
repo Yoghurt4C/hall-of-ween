@@ -1,6 +1,5 @@
 package mods.hallofween.network;
 
-import mods.hallofween.HallOfWeen;
 import mods.hallofween.registry.ContainerRegistry;
 import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
 import net.fabricmc.fabric.api.networking.v1.PacketSender;
@@ -20,9 +19,10 @@ import java.util.List;
 import java.util.Map;
 
 import static mods.hallofween.registry.ContainerRegistry.CONTAINERS;
+import static mods.hallofween.util.HallOfWeenUtil.getId;
 
 public interface S2CContainerSyncMessage {
-    Identifier MESSAGEID = HallOfWeen.getId("sync_containers");
+    Identifier MESSAGEID = getId("sync_containers");
 
     static PacketByteBuf getBuf() {
         PacketByteBuf buf = PacketByteBufs.create();

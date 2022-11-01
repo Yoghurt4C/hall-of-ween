@@ -13,7 +13,6 @@ import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.client.itemgroup.FabricItemGroupBuilder;
 import net.fabricmc.fabric.api.loot.v1.FabricLootPoolBuilder;
 import net.fabricmc.fabric.api.loot.v1.event.LootTableLoadingCallback;
-import net.minecraft.item.Item;
 import net.minecraft.item.ItemGroup;
 import net.minecraft.item.ItemStack;
 import net.minecraft.loot.ConstantLootTableRange;
@@ -24,15 +23,13 @@ import net.minecraft.loot.function.SetCountLootFunction;
 import net.minecraft.loot.function.SetNbtLootFunction;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.util.Identifier;
-import net.minecraft.util.registry.Registry;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 
 import java.util.Map;
 import java.util.function.Predicate;
 
+import static mods.hallofween.util.HallOfWeenUtil.*;
+
 public class HallOfWeen implements ModInitializer {
-    public static final Identifier DEFAULTID = new Identifier("hallofween", "hallofween");
     public static Map<Identifier, Identifier> DISCOVERY = new Object2ObjectOpenHashMap<>();
     public static ItemGroup ITEMGROUP = FabricItemGroupBuilder.create(DEFAULTID)
             .icon(() -> new ItemStack(getItem("testificate")))
@@ -45,7 +42,6 @@ public class HallOfWeen implements ModInitializer {
             .icon(() -> new ItemStack(getItem("recipe_sheet")))
             .appendItems(RecipeSheetItem::appendStacks)
             .build();
-    public static final Logger L = LogManager.getLogger("Hall of Ween");
 
     @Override
     public void onInitialize() {
@@ -99,17 +95,5 @@ public class HallOfWeen implements ModInitializer {
             });
         }
 
-    }
-
-    public static String getModId() {
-        return DEFAULTID.getNamespace();
-    }
-
-    public static Identifier getId(String id) {
-        return new Identifier(getModId(), id);
-    }
-
-    public static Item getItem(String id) {
-        return Registry.ITEM.get(getId(id));
     }
 }

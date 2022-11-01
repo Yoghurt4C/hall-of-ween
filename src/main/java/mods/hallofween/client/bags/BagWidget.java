@@ -3,7 +3,6 @@ package mods.hallofween.client.bags;
 import com.google.common.collect.Sets;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.datafixers.util.Pair;
-import mods.hallofween.HallOfWeen;
 import mods.hallofween.bags.BagHolder;
 import mods.hallofween.bags.BagInventory;
 import mods.hallofween.mixin.bags.client.HandledScreenAccessor;
@@ -26,13 +25,14 @@ import java.util.Iterator;
 import java.util.Set;
 
 import static mods.hallofween.client.bags.BagHandler.*;
+import static mods.hallofween.util.HallOfWeenUtil.getId;
 
 /**
  * Most of this class is just vanilla copy with minor edits and shortcuts here and there.
  * Why is everything in HandledScreen private?
  */
 public class BagWidget extends Screen {
-    private final Identifier GUI = HallOfWeen.getId("textures/gui/inventory.png");
+    private final Identifier GUI = getId("textures/gui/inventory.png");
     private final int bagW = 218;
     private final int bagH = 97;
     private int bagX, bagY;

@@ -17,7 +17,8 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
-import static mods.hallofween.HallOfWeen.L;
+import static mods.hallofween.util.HallOfWeenUtil.L;
+import static mods.hallofween.util.HallOfWeenUtil.getModId;
 
 public class Config {
     private static boolean isInitialized = false;
@@ -55,6 +56,9 @@ public class Config {
                 Entry.of("enableREICompat", true,
                         "enableREICompat: Adds various bits and bobs to RoughlyEnoughItems to enhance your Recipe viewing experience. [Side: CLIENT | Default: true]")
         );
+        if (Files.notExists(getConfigDir()) && !getConfigDir().toFile().mkdir()) {
+            L.error("[" + getModId() + "] Can't reach the config directory. This is probably really bad.");
+        }
         Path configPath = getConfigDir().resolve(filename);
         Map<String, String> cfg = new HashMap<>();
         try {
@@ -63,7 +67,7 @@ public class Config {
             StringBuilder content = new StringBuilder().append("#Audino Configuration.\n");
             content.append("#Last generated at: ").append(new Date()).append("\n\n");
             if (Files.notExists(configPath) && !configurationFile.createNewFile())
-                L.error("[" + HallOfWeen.getModId() + "] Can't create config file \"" + configurationFile + "\". This is probably bad.");
+                L.error("[" + getModId() + "] Can't create config file \"" + configurationFile + "\". This is probably bad.");
             BufferedReader r = Files.newBufferedReader(configPath, StandardCharsets.UTF_8);
 
             String line;
@@ -112,14 +116,14 @@ public class Config {
             }
             isInitialized = true;
         } catch (IOException e) {
-            L.fatal("[" + HallOfWeen.getModId() + "] Could not read/write config!");
+            L.fatal("[" + getModId() + "] Could not read/write config!");
             L.fatal(e);
         }
     }
 
     private static void logEntryError(File configurationFile, String key, Object value, String found, String expected) {
-        L.error("[" + HallOfWeen.getModId() + "] Error processing configuration file \"" + configurationFile + "\".");
-        L.error("[" + HallOfWeen.getModId() + "] Expected configuration value for " + key + " to be " + expected + ", found \"" + found + "\". Using default value \"" + value + "\" instead.");
+        L.error("[" + getModId() + "] Error processing configuration file \"" + configurationFile + "\".");
+        L.error("[" + getModId() + "] Expected configuration value for " + key + " to be " + expected + ", found \"" + found + "\". Using default value \"" + value + "\" instead.");
         setCfgValue(key, value);
     }
 
@@ -127,7 +131,7 @@ public class Config {
         try {
             Config.class.getDeclaredField(k).set(Config.class, v);
         } catch (NoSuchFieldException | IllegalAccessException e) {
-            L.error("[" + HallOfWeen.getModId() + "] Could not set the runtime config state!");
+            L.error("[" + getModId() + "] Could not set the runtime config state!");
             L.error(e);
         }
     }

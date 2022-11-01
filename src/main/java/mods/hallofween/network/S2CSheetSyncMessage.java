@@ -1,6 +1,5 @@
 package mods.hallofween.network;
 
-import mods.hallofween.HallOfWeen;
 import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
 import net.fabricmc.fabric.api.networking.v1.PacketSender;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
@@ -16,9 +15,10 @@ import net.minecraft.util.Identifier;
 import java.util.Map;
 
 import static mods.hallofween.HallOfWeen.DISCOVERY;
+import static mods.hallofween.util.HallOfWeenUtil.getId;
 
 public interface S2CSheetSyncMessage {
-    Identifier MESSAGEID = HallOfWeen.getId("sync_sheets");
+    Identifier MESSAGEID = getId("sync_sheets");
 
     static PacketByteBuf getBuf() {
         PacketByteBuf buf = PacketByteBufs.create();
