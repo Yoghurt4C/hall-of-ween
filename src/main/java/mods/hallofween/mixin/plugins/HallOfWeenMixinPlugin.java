@@ -28,7 +28,7 @@ public class HallOfWeenMixinPlugin implements IMixinConfigPlugin {
             return Config.enableDiscoveryRecipes;
         else if (parseFeature(mixin, "bags"))
             return Config.enableBagInventory;
-        else if (parseFeature(mixin, "compat/rei"))
+        else if (parseFeature(mixin, "compat.rei"))
             return FabricLoader.getInstance().isModLoaded("roughlyenoughitems") && Config.enableREICompat;
         return true;
     }
