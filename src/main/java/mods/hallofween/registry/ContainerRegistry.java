@@ -4,7 +4,6 @@ import com.google.gson.*;
 import it.unimi.dsi.fastutil.objects.Object2ObjectLinkedOpenHashMap;
 import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
 import mods.hallofween.Config;
-import net.minecraft.item.ItemStack;
 import net.minecraft.resource.ResourceManager;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.MathHelper;
@@ -20,7 +19,6 @@ import java.util.Map;
 import java.util.function.Predicate;
 
 import static mods.hallofween.util.HallOfWeenUtil.L;
-import static mods.hallofween.util.HallOfWeenUtil.getItem;
 
 public class ContainerRegistry {
     public static Map<String, ContainerProperties> CONTAINERS = new Object2ObjectOpenHashMap<>();
@@ -133,17 +131,6 @@ public class ContainerRegistry {
             } catch (IOException e) {
                 L.error(e.getMessage());
             }
-        }
-    }
-
-    public static void appendItems(List<ItemStack> list) {
-        for (Map.Entry<String, ContainerProperties> e : ContainerRegistry.CONTAINERS.entrySet()) {
-            ItemStack stack = new ItemStack(getItem("container"));
-            ContainerProperties props = e.getValue();
-            stack.getOrCreateTag().putString("bagId", e.getKey());
-            if (props.bagColor != 0xFFFFFF) stack.getTag().putInt("bagColor", props.bagColor);
-            if (props.overlayColor != 0xFFFFFF) stack.getTag().putInt("overlayColor", props.overlayColor);
-            list.add(stack);
         }
     }
 

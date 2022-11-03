@@ -1,5 +1,7 @@
 package mods.hallofween.item;
 
+import mods.hallofween.HallOfWeen;
+import mods.hallofween.registry.ContainerRegistry;
 import mods.hallofween.util.HallOfWeenUtil;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
@@ -7,6 +9,7 @@ import net.fabricmc.fabric.api.item.v1.FabricItemSettings;
 import net.minecraft.client.item.TooltipContext;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Item;
+import net.minecraft.item.ItemGroup;
 import net.minecraft.item.ItemStack;
 import net.minecraft.loot.LootTable;
 import net.minecraft.loot.context.LootContext;
@@ -20,17 +23,20 @@ import net.minecraft.util.Formatting;
 import net.minecraft.util.Hand;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.TypedActionResult;
+import net.minecraft.util.collection.DefaultedList;
 import net.minecraft.world.World;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
+import java.util.Map;
 
 import static mods.hallofween.registry.ContainerRegistry.CONTAINERS;
 import static mods.hallofween.registry.ContainerRegistry.ContainerProperties;
+import static mods.hallofween.util.HallOfWeenUtil.getItem;
 
 public class ContainerItem extends Item {
     public ContainerItem() {
-        super(new FabricItemSettings());
+        super(new FabricItemSettings().group(HallOfWeen.CONTAINER_GROUP));
     }
 
     @Override
@@ -91,6 +97,20 @@ public class ContainerItem extends Item {
             }
         }
         tooltip.add(new TranslatableText("text.container.empty").formatted(Formatting.DARK_PURPLE, Formatting.ITALIC));
+    }
+
+    @Override
+    public void appendStacks(ItemGroup group, DefaultedList<ItemStack> stacks) {
+        if (group.equals(HallOfWeen.CONTAINER_GROUP)) {
+            for (Map.Entry<String, ContainerProperties> e : ContainerRegistry.CONTAINERS.entrySet()) {
+                ItemStack stack = new ItemStack(getItem("container"));
+                ContainerProperties props = e.getValue();
+                stack.getOrCreateTag().putString("bagId", e.getKey());
+                if (props.bagColor != 0xFFFFFF) stack.getTag().putInt("bagColor", props.bagColor);
+                if (props.overlayColor != 0xFFFFFF) stack.getTag().putInt("overlayColor", props.overlayColor);
+                stacks.add(stack);
+            }
+        }
     }
 
     @Environment(EnvType.CLIENT)

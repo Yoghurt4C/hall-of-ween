@@ -79,7 +79,7 @@ public class HallOfWeenItems {
         register("rotten_egg", new ThrownSpookyItem(ThrownRottenEgg::new));
         register("toilet_paper", new ThrownSpookyItem(ThrownToiletPaper::new));
 
-        register("recipe_sheet", new RecipeSheetItem(new FabricItemSettings().food(new FoodComponent.Builder().alwaysEdible().snack().build())));
+        register("recipe_sheet", new RecipeSheetItem());
     }
 
     private static FabricItemSettings generic() {

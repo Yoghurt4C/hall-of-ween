@@ -1,12 +1,16 @@
 package mods.hallofween.item;
 
 import mods.hallofween.Config;
+import mods.hallofween.HallOfWeen;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
+import net.fabricmc.fabric.api.item.v1.FabricItemSettings;
 import net.minecraft.client.item.TooltipContext;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.item.FoodComponent;
 import net.minecraft.item.Item;
+import net.minecraft.item.ItemGroup;
 import net.minecraft.item.ItemStack;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvent;
@@ -16,6 +20,7 @@ import net.minecraft.text.Text;
 import net.minecraft.text.TranslatableText;
 import net.minecraft.util.Formatting;
 import net.minecraft.util.Identifier;
+import net.minecraft.util.collection.DefaultedList;
 import net.minecraft.util.registry.Registry;
 import net.minecraft.world.World;
 import org.jetbrains.annotations.Nullable;
@@ -26,8 +31,8 @@ import static mods.hallofween.HallOfWeen.DISCOVERY;
 import static mods.hallofween.util.HallOfWeenUtil.getItem;
 
 public class RecipeSheetItem extends Item {
-    public RecipeSheetItem(Settings settings) {
-        super(settings);
+    public RecipeSheetItem() {
+        super(new FabricItemSettings().group(HallOfWeen.DISCOVERY_GROUP).food(new FoodComponent.Builder().alwaysEdible().snack().build()));
     }
 
     @Override
@@ -75,11 +80,14 @@ public class RecipeSheetItem extends Item {
         return super.getName(stack);
     }
 
-    public static void appendStacks(List<ItemStack> list) {
-        for (Identifier id : DISCOVERY.keySet()) {
-            ItemStack stack = new ItemStack(getItem("recipe_sheet"));
-            stack.getOrCreateTag().putString("targetItem", id.toString());
-            list.add(stack);
+    @Override
+    public void appendStacks(ItemGroup group, DefaultedList<ItemStack> list) {
+        if (group.equals(HallOfWeen.DISCOVERY_GROUP)) {
+            for (Identifier id : DISCOVERY.keySet()) {
+                ItemStack stack = new ItemStack(getItem("recipe_sheet"));
+                stack.getOrCreateTag().putString("targetItem", id.toString());
+                list.add(stack);
+            }
         }
     }
 

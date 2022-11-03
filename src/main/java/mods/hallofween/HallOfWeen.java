@@ -2,7 +2,6 @@ package mods.hallofween;
 
 import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
 import mods.hallofween.item.ContainerItem;
-import mods.hallofween.item.RecipeSheetItem;
 import mods.hallofween.registry.ContainerRegistry;
 import mods.hallofween.registry.ContainerRegistry.ContainerLootProperties;
 import mods.hallofween.registry.ContainerRegistry.ContainerProperties;
@@ -36,11 +35,9 @@ public class HallOfWeen implements ModInitializer {
             .build();
     public static ItemGroup CONTAINER_GROUP = FabricItemGroupBuilder.create(getId("containers"))
             .icon(ContainerItem::getDefaultContainer)
-            .appendItems(ContainerRegistry::appendItems)
             .build();
     public static ItemGroup DISCOVERY_GROUP = FabricItemGroupBuilder.create(getId("discovery"))
             .icon(() -> new ItemStack(getItem("recipe_sheet")))
-            .appendItems(RecipeSheetItem::appendStacks)
             .build();
 
     @Override
