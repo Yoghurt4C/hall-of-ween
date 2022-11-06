@@ -52,7 +52,6 @@ public class SheetWidget extends WidgetWithBounds {
             List<Text> tt = new ArrayList<>();
             tt.add(sheet.getName());
             if (mc.options.advancedItemTooltips)
-
                 tt.add(new LiteralText(advId.toString()).formatted(Formatting.DARK_GRAY));
             if (noAdv)
                 tt.add(new TranslatableText("text.hallofween.rei_advancement").formatted(Formatting.RED, Formatting.BOLD));

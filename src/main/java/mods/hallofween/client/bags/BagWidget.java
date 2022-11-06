@@ -24,7 +24,7 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.Set;
 
-import static mods.hallofween.client.bags.BagHandler.*;
+import static mods.hallofween.client.bags.BagData.*;
 import static mods.hallofween.util.HallOfWeenUtil.getId;
 
 /**
@@ -42,24 +42,15 @@ public class BagWidget extends Screen {
     @Nullable
     protected Slot focusedSlot;
     @Nullable
-    private Slot touchDragSlotStart;
-    @Nullable
-    private Slot touchDropOriginSlot;
-    @Nullable
-    private Slot touchHoveredSlot;
-    @Nullable
     private Slot lastClickedSlot;
     protected int x;
     protected int y;
-    private boolean touchIsRightClickDrag;
-    private ItemStack touchDragStack;
-    private int touchDropX;
-    private int touchDropY;
-    private long touchDropTime;
-    private ItemStack touchDropReturningStack;
-    private long touchDropTimer;
     protected final Set<Slot> cursorDragSlots;
     protected boolean cursorDragging;
+    @Nullable
+    private Slot touchDragSlotStart;
+    private boolean touchIsRightClickDrag;
+    private ItemStack touchDragStack;
     private int heldButtonType;
     private int heldButtonCode;
     private boolean cancelNextRelease;
@@ -86,19 +77,18 @@ public class BagWidget extends Screen {
         int bX = bagX + 4, bY = bagY + 23, contX = bX + 23, contY = bY - 18;
         bagSlots = new ArrayList<>();
         contentSlots = new ArrayList<>();
-        for (int i = 0; i < bags.contents.size(); ) {
-            if (i < bags.contentsOrdinal) {
-                bagSlots.add(new Slot(bags, i, bX, bY));
-                bY += 18;
-                i++;
-            } else {
-                contentSlots.add(new Slot(bags, i, contX, contY));
-                contX += 18;
-                i++;
-                if (i % 10 == 0) {
-                    contX = bX + 23;
-                    contY += 18;
-                }
+        for (int i = 0; i < 10; i++) {
+            bagSlots.add(new Slot(bags, i, bX, bY));
+            bY += 18;
+            i++;
+        }
+        for (int i = 10; i < bags.size(); ) {
+            contentSlots.add(new Slot(bags, i, contX, contY));
+            contX += 18;
+            i++;
+            if (i % 10 == 0) {
+                contX = bX + 23;
+                contY += 18;
             }
         }
         super.init();
@@ -130,7 +120,7 @@ public class BagWidget extends Screen {
             renderSlot(matrices, slot, mouseX, mouseY);
         }
 
-        for (Slot slot : contentSlots.subList(0, 40)) {
+        for (Slot slot : contentSlots) {
             renderSlot(matrices, slot, mouseX, mouseY);
         }
     }
@@ -246,5 +236,31 @@ public class BagWidget extends Screen {
         //pointX -= i;
         //pointY -= j;
         return pointX >= slot.x - 1 && pointX < slot.x + width + 1 && pointY >= slot.y - 1 && pointY < slot.y + height + 1;
+    }
+
+    @Override
+    public boolean mouseClicked(double mouseX, double mouseY, int button) {
+        PlayerInventory inv = client.player.inventory;
+        for (Slot bagSlot : bagSlots) {
+            if (isPointOverSlot(bagSlot, 16, 16, mouseX, mouseY)) {
+                if (inv.getCursorStack().isEmpty()) {
+                    inv.setCursorStack(bagSlot.getStack().copy());
+                    bagSlot.setStack(ItemStack.EMPTY);
+                    return true;
+                } else {
+                    //todo
+                }
+            }
+        }
+        for (Slot slot : contentSlots) {
+            if (isPointOverSlot(slot, 16, 16, mouseX, mouseY)) {
+                if (inv.getCursorStack().isEmpty()) {
+                    inv.setCursorStack(slot.getStack().copy());
+                    slot.setStack(ItemStack.EMPTY);
+                    return true;
+                }
+            }
+        }
+        return true;
     }
 }

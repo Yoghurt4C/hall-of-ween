@@ -80,6 +80,8 @@ public class HallOfWeenItems {
         register("toilet_paper", new ThrownSpookyItem(ThrownToiletPaper::new));
 
         register("recipe_sheet", new RecipeSheetItem());
+
+        register("testbag", new BagItem(generic()));
     }
 
     private static FabricItemSettings generic() {

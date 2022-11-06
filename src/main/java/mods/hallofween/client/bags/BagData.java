@@ -6,7 +6,7 @@ import net.minecraft.screen.slot.Slot;
 
 import java.util.List;
 
-public class BagHandler {
+public class BagData {
     public static List<Slot> bagSlots;
     public static List<Slot> contentSlots;
 

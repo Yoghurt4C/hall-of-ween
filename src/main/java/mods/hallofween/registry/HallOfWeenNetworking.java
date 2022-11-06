@@ -5,6 +5,7 @@ import mods.hallofween.network.S2CSheetSyncMessage;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayConnectionEvents;
+import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 
 public class HallOfWeenNetworking {
     public static void init() {

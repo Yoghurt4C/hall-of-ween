@@ -2,7 +2,7 @@ package mods.hallofween.client;
 
 import me.shedaniel.cloth.api.client.events.v0.ClothClientHooks;
 import mods.hallofween.Config;
-import mods.hallofween.client.bags.BagHandler;
+import mods.hallofween.client.bags.BagData;
 import mods.hallofween.client.bags.BagWidget;
 import mods.hallofween.entity.ThrownRottenEgg;
 import mods.hallofween.entity.ThrownToiletPaper;
@@ -56,15 +56,15 @@ public class HallOfWeenClient implements ClientModInitializer {
         if (Config.enableBagInventory) {
             ClothClientHooks.SCREEN_INIT_POST.register(((client, screen, screenHooks) -> {
                 if (screen instanceof HandledScreen) {
-                    BagHandler.widget = new BagWidget(Text.of("fuckyou"), client, (HandledScreen<?>) screen);
-                    BagHandler.widget.init(client, 218, 97);
-                    screenHooks.cloth$getChildren().add(BagHandler.widget);
+                    BagData.widget = new BagWidget(Text.of("fuckyou"), client, (HandledScreen<?>) screen);
+                    BagData.widget.init(client, 218, 97);
+                    screenHooks.cloth$getChildren().add(BagData.widget);
                 }
             }));
 
             ClothClientHooks.SCREEN_RENDER_POST.register((matrices, minecraftClient, screen, i, i1, v) -> {
                 if (screen instanceof HandledScreen) {
-                    BagHandler.widget.render(matrices, i, i1, v);
+                    BagData.widget.render(matrices, i, i1, v);
                 }
             });
         }
