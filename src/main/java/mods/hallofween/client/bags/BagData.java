@@ -7,9 +7,7 @@ import net.minecraft.screen.slot.Slot;
 import java.util.List;
 
 public class BagData {
-    public static List<Slot> bagSlots;
-    public static List<Slot> contentSlots;
-
+    public static List<Slot> slots;
     public static BagWidget widget = null;
 
     public static BagHolder getBagHolder(PlayerEntity player) {

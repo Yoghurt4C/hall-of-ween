@@ -6,6 +6,8 @@ import com.mojang.datafixers.util.Pair;
 import mods.hallofween.bags.BagHolder;
 import mods.hallofween.bags.BagInventory;
 import mods.hallofween.mixin.bags.client.HandledScreenAccessor;
+import mods.hallofween.mixin.bags.client.SlotAccessor;
+import mods.hallofween.network.BagSlotChangeMessage;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.screen.ingame.HandledScreen;
@@ -24,7 +26,8 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.Set;
 
-import static mods.hallofween.client.bags.BagData.*;
+import static mods.hallofween.client.bags.BagData.slots;
+import static mods.hallofween.client.bags.BagData.widget;
 import static mods.hallofween.util.HallOfWeenUtil.getId;
 
 /**
@@ -71,19 +74,17 @@ public class BagWidget extends Screen {
     }
 
     @Override
-    protected void init() {
+    public void init() {
         bagX = this.x - this.bagW;
         bagY = (this.client.getWindow().getScaledHeight() - this.bagH) / 2;
-        int bX = bagX + 4, bY = bagY + 23, contX = bX + 23, contY = bY - 18;
-        bagSlots = new ArrayList<>();
-        contentSlots = new ArrayList<>();
+        int bX = bagX + 4, bY = bagY + 23, contX = bX + 23, contY = bY;
+        slots = new ArrayList<>();
         for (int i = 0; i < 10; i++) {
-            bagSlots.add(new Slot(bags, i, bX, bY));
+            slots.add(new Slot(bags, i, bX, bY));
             bY += 18;
-            i++;
         }
         for (int i = 10; i < bags.size(); ) {
-            contentSlots.add(new Slot(bags, i, contX, contY));
+            slots.add(new Slot(bags, i, contX, contY));
             contX += 18;
             i++;
             if (i % 10 == 0) {
@@ -91,7 +92,6 @@ public class BagWidget extends Screen {
                 contY += 18;
             }
         }
-        super.init();
     }
 
     @Override
@@ -116,11 +116,7 @@ public class BagWidget extends Screen {
     }
 
     public void drawForeground(MatrixStack matrices, int mouseX, int mouseY) {
-        for (Slot slot : bagSlots) {
-            renderSlot(matrices, slot, mouseX, mouseY);
-        }
-
-        for (Slot slot : contentSlots) {
+        for (Slot slot : slots) {
             renderSlot(matrices, slot, mouseX, mouseY);
         }
     }
@@ -231,36 +227,23 @@ public class BagWidget extends Screen {
     }
 
     protected boolean isPointOverSlot(Slot slot, int width, int height, double pointX, double pointY) {
-        int i = this.x;
-        int j = this.y;
-        //pointX -= i;
-        //pointY -= j;
         return pointX >= slot.x - 1 && pointX < slot.x + width + 1 && pointY >= slot.y - 1 && pointY < slot.y + height + 1;
     }
 
     @Override
+    public boolean isMouseOver(double pointX, double pointY) {
+        return pointX >= bagX && pointX <= bagX + bagW && pointY >= bagY && pointY <= bagY + bagH;
+    }
+
+    @Override
     public boolean mouseClicked(double mouseX, double mouseY, int button) {
-        PlayerInventory inv = client.player.inventory;
-        for (Slot bagSlot : bagSlots) {
-            if (isPointOverSlot(bagSlot, 16, 16, mouseX, mouseY)) {
-                if (inv.getCursorStack().isEmpty()) {
-                    inv.setCursorStack(bagSlot.getStack().copy());
-                    bagSlot.setStack(ItemStack.EMPTY);
-                    return true;
-                } else {
-                    //todo
-                }
+        if (isMouseOver(mouseX, mouseY)) {
+            if (focusedSlot != null) {
+                int index = ((SlotAccessor) focusedSlot).getIndex();
+                new BagSlotChangeMessage(index).send();
             }
+            return true;
         }
-        for (Slot slot : contentSlots) {
-            if (isPointOverSlot(slot, 16, 16, mouseX, mouseY)) {
-                if (inv.getCursorStack().isEmpty()) {
-                    inv.setCursorStack(slot.getStack().copy());
-                    slot.setStack(ItemStack.EMPTY);
-                    return true;
-                }
-            }
-        }
-        return true;
+        return false;
     }
 }

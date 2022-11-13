@@ -1,35 +1,39 @@
 package mods.hallofween.bags;
 
-import com.google.common.collect.Lists;
-import it.unimi.dsi.fastutil.objects.Object2ObjectLinkedOpenHashMap;
 import mods.hallofween.item.BagItem;
-import net.fabricmc.loader.api.FabricLoader;
+import mods.hallofween.mixin.bags.DefaultedListAccessor;
+import mods.hallofween.network.BagSyncMessage;
+import mods.hallofween.util.HallOfWeenUtil;
 import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.inventory.Inventories;
 import net.minecraft.inventory.Inventory;
 import net.minecraft.item.ItemStack;
-import net.minecraft.item.Items;
+import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.util.ItemScatterer;
 import net.minecraft.util.collection.DefaultedList;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
 public class BagInventory implements Inventory {
     public DefaultedList<ItemStack> contents;
 
     public BagInventory() {
-        this.contents = DefaultedList.ofSize(10, ItemStack.EMPTY);
+        List<ItemStack> bags = new ArrayList<>();
+        for (int i = 0; i < 10; i++) {
+            bags.add(ItemStack.EMPTY);
+        }
+        this.contents = DefaultedListAccessor.constructor(bags, ItemStack.EMPTY);
     }
 
-    public ItemStack addBag(int slot, ItemStack bag) {
+    private void setBag(int slot, ItemStack bag, PlayerEntity player) {
         ItemStack stack = contents.get(slot);
         if (bag.getItem() instanceof BagItem) {
-            BagItem item = (BagItem) bag.getItem();
             this.contents.set(slot, bag);
             int pointer = getBagContentsStart(slot);
-            if (pointer > contents.size()) {
-                contents.addAll(DefaultedList.ofSize(getBagSize(bag), ItemStack.EMPTY));
+            if (pointer > contents.size() - 1) {
+                contents.addAll(pointer, DefaultedList.ofSize(getBagSize(bag), ItemStack.EMPTY));
             } else {
                 if (stack.getItem() instanceof BagItem && pointer + getBagSize(stack) <= contents.size()) {
                     List<ItemStack> list = DefaultedList.ofSize(getBagSize(bag), ItemStack.EMPTY);
@@ -39,9 +43,14 @@ public class BagInventory implements Inventory {
                     contents.addAll(pointer, list);
                 }
             }
-            return ItemStack.EMPTY;
+        } else if (bag.equals(ItemStack.EMPTY) && !player.world.isClient()) {
+            this.removeBag(slot, player);
         }
-        return stack;
+    }
+
+    public void resolveSetStack(int slot, ItemStack stack, PlayerEntity player) {
+        if (slot < 10) setBag(slot, stack, player);
+        else setStack(slot, stack);
     }
 
     private int getBagContentsStart(int slot) {
@@ -69,7 +78,21 @@ public class BagInventory implements Inventory {
         return 0;
     }
 
-    public void removeBag(ItemStack stack) {
+    public void removeBag(int slot, PlayerEntity player) {
+        List<ItemStack> bag = getBagView(slot);
+        if (player != null) {
+            while (!bag.isEmpty()) {
+                int i = 0;
+                ItemStack stack = bag.remove(0);
+                if (!stack.isEmpty())
+                    ItemScatterer.spawn(player.world, player.getX(), player.getY(), player.getZ(), stack);
+                HallOfWeenUtil.L.info(String.format("%dth operation on stack %s", i, stack.getName().asString()));
+                i++;
+            }
+        }
+        this.contents.remove(slot);
+        this.contents.add(9, ItemStack.EMPTY);
+        new BagSyncMessage(this.contents).send((ServerPlayerEntity) player);
     }
 
     //valid = not full
@@ -77,7 +100,7 @@ public class BagInventory implements Inventory {
         for (int i = 0; i < 10; i++) {
             int start = getBagContentsStart(i);
             int end = getBagSize(i);
-            if (!isBagFull(getBagView(start, end))) return i;
+            if (!isBagFull(getBagViewInternal(start, end))) return i;
         }
         return -1;
     }
@@ -86,11 +109,17 @@ public class BagInventory implements Inventory {
     public List<ItemStack> getFirstValidBagView() {
         for (int i = 0; i < 10; i++) {
             int start = getBagContentsStart(i);
-            int end = getBagSize(i);
-            List<ItemStack> list = getBagView(start, end);
+            int end = start + getBagSize(i);
+            List<ItemStack> list = getBagViewInternal(start, end);
             if (!isBagFull(list)) return list;
         }
         return null;
+    }
+
+    public List<ItemStack> getBagView(int bag) {
+        int start = getBagContentsStart(bag);
+        int end = start + getBagSize(bag);
+        return getBagViewInternal(start, end);
     }
 
     public ItemStack putStack(ItemStack stack) {
@@ -102,7 +131,7 @@ public class BagInventory implements Inventory {
         return stack;
     }
 
-    private List<ItemStack> getBagView(int start, int end) {
+    private List<ItemStack> getBagViewInternal(int start, int end) {
         return contents.subList(start, end);
     }
 

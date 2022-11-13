@@ -11,7 +11,6 @@ import net.minecraft.client.render.VertexConsumerProvider;
 import net.minecraft.client.render.model.BakedModel;
 import net.minecraft.client.render.model.json.ModelTransformation;
 import net.minecraft.client.render.model.json.ModelTransformation.Mode;
-import net.minecraft.client.util.ModelIdentifier;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.client.util.math.Vector3f;
 import net.minecraft.item.Item;
@@ -21,19 +20,15 @@ import net.minecraft.util.math.Matrix4f;
 import net.minecraft.util.math.Quaternion;
 import net.minecraft.util.registry.Registry;
 
-import static mods.hallofween.util.HallOfWeenUtil.getId;
-
 public class RecipeSheetRenderer implements BuiltinItemRendererRegistry.DynamicItemRenderer {
-
-    private final ModelIdentifier sheetModel = new ModelIdentifier(getId("recipe_sheet_base"), "inventory");
+    public static BakedModel sheetModel;
 
     @Override
     public void render(ItemStack stack, Mode mode, MatrixStack matrices, VertexConsumerProvider vertexConsumers, int light, int overlay) {
         MinecraftClient mc = MinecraftClient.getInstance();
-        BakedModel sheet = mc.getBakedModelManager().getModel(sheetModel);
         VertexConsumer vc = vertexConsumers.getBuffer(RenderLayers.getItemLayer(stack, true));
         ItemRendererAccessor ir = (ItemRendererAccessor) mc.getItemRenderer();
-        ir.renderModel(sheet, stack, light, overlay, matrices, vc);
+        ir.renderModel(sheetModel, stack, light, overlay, matrices, vc);
         if (stack.hasTag() && stack.getTag().contains("targetItem")) {
             Item item = Registry.ITEM.get(new Identifier(stack.getTag().getString("targetItem")));
             ItemStack render = new ItemStack(item);

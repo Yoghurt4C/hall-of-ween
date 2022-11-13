@@ -14,26 +14,23 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundTag;
 
 import static mods.hallofween.registry.ContainerRegistry.CONTAINERS;
-import static mods.hallofween.util.HallOfWeenUtil.getId;
 
 public class ContainerRenderer implements BuiltinItemRendererRegistry.DynamicItemRenderer {
-    public final ModelIdentifier MISSINGNO = new ModelIdentifier(getId("container/missingno"), "inventory");
+    public static BakedModel MISSINGNO;
 
     @Override
     public void render(ItemStack stack, ModelTransformation.Mode mode, MatrixStack matrices, VertexConsumerProvider vertexConsumers, int light, int overlay) {
         MinecraftClient mc = MinecraftClient.getInstance();
-        //RenderLayer layer = mode == ModelTransformation.Mode.FIXED ? TexturedRenderLayers.getEntityCutout() : RenderLayers.getItemLayer(stack, true);
         RenderLayer layer = RenderLayers.getItemLayer(stack, true);
-        BakedModel model;
+        BakedModel model = MISSINGNO;
         if (stack.hasTag() && stack.getTag().contains("bagId")) {
             CompoundTag tag = stack.getTag();
             String id = tag.getString("bagId");
-            model = mc.getBakedModelManager().getModel(new ModelIdentifier(CONTAINERS.get(id).modelId, "inventory"));
-        } else {
-            model = mc.getBakedModelManager().getModel(MISSINGNO);
+            if (CONTAINERS.containsKey(id)) {
+                model = mc.getBakedModelManager().getModel(new ModelIdentifier(CONTAINERS.get(id).modelId, "inventory"));
+            }
         }
         ItemRendererAccessor ir = (ItemRendererAccessor) mc.getItemRenderer();
         ir.renderModel(model, stack, light, overlay, matrices, vertexConsumers.getBuffer(layer));
-        //mc.getBlockRenderManager().getModelRenderer().render(matrices.peek(), vertexConsumers.getBuffer(layer), null, model, 1f, 1f, 1f, light, overlay);
     }
 }

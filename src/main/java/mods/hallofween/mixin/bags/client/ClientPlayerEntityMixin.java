@@ -11,7 +11,6 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 public abstract class ClientPlayerEntityMixin {
     @Inject(method = "closeScreen", at = @At("TAIL"))
     public void cleanup(CallbackInfo ctx) {
-        BagData.bagSlots = null;
-        BagData.contentSlots = null;
+        BagData.slots = null;
     }
 }

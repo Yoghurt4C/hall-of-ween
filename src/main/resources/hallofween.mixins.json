@@ -5,10 +5,11 @@
   "plugin": "mods.hallofween.mixin.plugins.HallOfWeenMixinPlugin",
   "compatibilityLevel": "JAVA_8",
   "mixins": [
+    "bags.DefaultedListAccessor",
     "bags.PlayerInventoryBagHolder",
     "containers.LootManagerMixin",
-    "discovery.CraftingScreenHandlerAccessor",
     "discovery.CraftingInventoryAccessor",
+    "discovery.CraftingScreenHandlerAccessor",
     "discovery.PlayerScreenHandlerAccessor",
     "discovery.ShapedRecipeMixin",
     "discovery.ShapedRecipeMixin$ShapedRecipeSerializerMixin",
@@ -18,6 +19,9 @@
   "client": [
     "bags.client.ClientPlayerEntityMixin",
     "bags.client.HandledScreenAccessor",
+    "bags.client.HandledScreenMixin",
+    "bags.client.SlotAccessor",
+    "client.BakedModelManagerMixin",
     "client.EntitySpawnSyncMixin",
     "client.ItemRendererAccessor",
     "compat.rei.DefaultCraftingCategoryMixin"

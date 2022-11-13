@@ -47,6 +47,6 @@ public interface S2CSheetSyncMessage {
     static void send(MinecraftServer server, ServerResourceManager serverResourceManager, boolean success) {
         PacketByteBuf buf = getBuf();
         for (ServerPlayerEntity player : server.getPlayerManager().getPlayerList())
-            ServerPlayNetworking.send(player, S2CContainerSyncMessage.MESSAGEID, buf);
+            ServerPlayNetworking.send(player, MESSAGEID, buf);
     }
 }
