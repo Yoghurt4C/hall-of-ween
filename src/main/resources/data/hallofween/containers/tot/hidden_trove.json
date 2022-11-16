@@ -29,7 +29,7 @@
                 },
                 {
                   "condition": "random_chance",
-                  "chance": 0.95
+                  "chance": 0.0018
                 },
                 {
                   "condition": "entity_properties",
