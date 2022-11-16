@@ -23,6 +23,7 @@ import net.minecraft.loot.function.SetNbtLootFunction;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.util.Identifier;
 
+import java.util.Arrays;
 import java.util.Map;
 import java.util.function.Predicate;
 
@@ -70,27 +71,32 @@ public class HallOfWeen implements ModInitializer {
                             String name = e.getKey();
                             ContainerProperties props = ContainerRegistry.CONTAINERS.get(name);
                             ContainerLootProperties lootProps = in.getValue();
-                            CompoundTag tag = new CompoundTag();
-                            tag.putString("bagId", name);
-                            if (props.bagColor != 0xFFFFFF) tag.putInt("bagColor", props.bagColor);
-                            if (props.overlayColor != 0xFFFFFF) tag.putInt("overlayColor", props.overlayColor);
-                            FabricLootPoolBuilder b = FabricLootPoolBuilder.builder()
-                                    .rolls(ConstantLootTableRange.create(1))
-                                    .with(ItemEntry.builder(getItem("container")))
-                                    .withFunction(SetNbtLootFunction.builder(tag).build())
-                                    .withFunction(lootProps.min == lootProps.max
-                                            ? SetCountLootFunction.builder(ConstantLootTableRange.create(lootProps.min)).build()
-                                            : SetCountLootFunction.builder(UniformLootTableRange.between(lootProps.min, lootProps.max)).build()
-                                    );
-                            if (lootProps.chance < 1f)
-                                b.withCondition(RandomChanceLootCondition.builder(lootProps.chance).build());
-                            supplier.withPool(b.build());
+                            if (lootProps.pools == null) {
+                                CompoundTag tag = new CompoundTag();
+                                tag.putString("bagId", name);
+                                if (props.bagColor != 0xFFFFFF) tag.putInt("bagColor", props.bagColor);
+                                if (props.overlayColor != 0xFFFFFF) tag.putInt("overlayColor", props.overlayColor);
+                                FabricLootPoolBuilder b = FabricLootPoolBuilder.builder()
+                                        .rolls(ConstantLootTableRange.create(1))
+                                        .with(ItemEntry.builder(getItem("container")))
+                                        .withFunction(SetNbtLootFunction.builder(tag).build())
+                                        .withFunction(lootProps.min == lootProps.max
+                                                ? SetCountLootFunction.builder(ConstantLootTableRange.create(lootProps.min)).build()
+                                                : SetCountLootFunction.builder(UniformLootTableRange.between(lootProps.min, lootProps.max)).build()
+                                        );
+                                if (lootProps.chance < 1f)
+                                    b.withCondition(RandomChanceLootCondition.builder(lootProps.chance).build());
+                                supplier.withPool(b.build());
+                            } else {
+                                supplier.withPools(Arrays.asList(lootProps.pools));
+                            }
                             break;
                         }
                     }
                 }
             });
-        }
 
+        }
+        ContainerRegistry.LOOT_PREDICATES.clear();
     }
 }

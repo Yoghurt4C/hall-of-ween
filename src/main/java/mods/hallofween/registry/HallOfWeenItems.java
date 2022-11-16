@@ -1,5 +1,6 @@
 package mods.hallofween.registry;
 
+import mods.hallofween.Config;
 import mods.hallofween.entity.ThrownRottenEgg;
 import mods.hallofween.entity.ThrownToiletPaper;
 import mods.hallofween.item.*;
@@ -81,7 +82,8 @@ public class HallOfWeenItems {
 
         register("recipe_sheet", new RecipeSheetItem());
 
-        register("testbag", new BagItem(generic()));
+        if (Config.enableBagInventory)
+            register("testbag", new BagItem(generic()));
     }
 
     private static FabricItemSettings generic() {

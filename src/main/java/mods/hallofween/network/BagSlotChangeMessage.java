@@ -103,12 +103,7 @@ public class BagSlotChangeMessage {
                 holder.getBagInventory().resolveSetStack(slot, cursor, player);
                 player.inventory.setCursorStack(stack);
 
-                response = PacketByteBufs.create();
-                response.writeByte(2);
-                response.writeInt(slot);
-                response.writeItemStack(holder.getBagInventory().getStack(slot));
-                response.writeItemStack(player.inventory.getCursorStack());
-                responseSender.sendPacket(MESSAGEID, response);
+                new BagSlotChangeMessage(slot, holder.getBagInventory().getStack(slot), player.inventory.getCursorStack()).send(player);
                 break;
             case 1:
                 stack = buf.readItemStack();
@@ -120,12 +115,7 @@ public class BagSlotChangeMessage {
                 holder.getBagInventory().resolveSetStack(slot, stack, player);
                 player.inventory.setCursorStack(cursor);
 
-                response = PacketByteBufs.create();
-                response.writeByte(type);
-                response.writeInt(slot);
-                response.writeItemStack(holder.getBagInventory().getStack(slot));
-                response.writeItemStack(player.inventory.getCursorStack());
-                responseSender.sendPacket(MESSAGEID, response);
+                new BagSlotChangeMessage(slot, holder.getBagInventory().getStack(slot), player.inventory.getCursorStack()).send(player);
                 break;
         }
     }

@@ -4,6 +4,8 @@ import com.google.gson.*;
 import it.unimi.dsi.fastutil.objects.Object2ObjectLinkedOpenHashMap;
 import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
 import mods.hallofween.Config;
+import net.minecraft.loot.LootGsons;
+import net.minecraft.loot.LootPool;
 import net.minecraft.resource.ResourceManager;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.MathHelper;
@@ -86,44 +88,57 @@ public class ContainerRegistry {
                         int min = 1;
                         int max = 1;
                         float chance = 1f;
+                        LootPool[] pool = null;
                         for (Map.Entry<String, JsonElement> kv : obj.entrySet()) {
-                            String v = kv.getValue().getAsString();
-                            switch (kv.getKey()) {
-                                case "namespace":
-                                    p = s -> s.getNamespace().equals(v);
-                                    break;
-                                case "contains":
-                                    p = s -> s.getPath().contains(v);
-                                    break;
-                                case "negate_contains":
-                                    p = s -> !s.getPath().contains(v);
-                                    break;
-                                case "starts_with":
-                                    p = s -> s.getPath().startsWith(v);
-                                    break;
-                                case "negate_starts_with":
-                                    p = s -> !s.getPath().startsWith(v);
-                                    break;
-                                case "ends_with":
-                                    p = s -> s.getPath().endsWith(v);
-                                    break;
-                                case "negate_ends_with":
-                                    p = s -> !s.getPath().endsWith(v);
-                                    break;
-                                case "min_amount":
-                                    min = Integer.parseInt(v);
-                                    break;
-                                case "max_amount":
-                                    max = Integer.parseInt(v);
-                                    break;
-                                case "chance":
-                                    chance = MathHelper.clamp(Float.parseFloat(v), 0, 1);
-                                    break;
-                                default:
-                                    break;
+                            if (kv.getValue().isJsonPrimitive()) {
+                                String v = kv.getValue().getAsString();
+                                switch (kv.getKey()) {
+                                    case "namespace":
+                                        p = s -> s.getNamespace().equals(v);
+                                        break;
+                                    case "contains":
+                                        p = s -> s.getPath().contains(v);
+                                        break;
+                                    case "negate_contains":
+                                        p = s -> !s.getPath().contains(v);
+                                        break;
+                                    case "starts_with":
+                                        p = s -> s.getPath().startsWith(v);
+                                        break;
+                                    case "negate_starts_with":
+                                        p = s -> !s.getPath().startsWith(v);
+                                        break;
+                                    case "ends_with":
+                                        p = s -> s.getPath().endsWith(v);
+                                        break;
+                                    case "negate_ends_with":
+                                        p = s -> !s.getPath().endsWith(v);
+                                        break;
+                                    case "min_amount":
+                                        min = Integer.parseInt(v);
+                                        break;
+                                    case "max_amount":
+                                        max = Integer.parseInt(v);
+                                        break;
+                                    case "chance":
+                                        chance = MathHelper.clamp(Float.parseFloat(v), 0, 1);
+                                        break;
+                                    default:
+                                        break;
+                                }
+                            } else {
+                                if ("pools".equals(kv.getKey())) {
+                                    Gson LOOT = LootGsons.getTableGsonBuilder().create();
+                                    try {
+                                        pool = LOOT.fromJson(kv.getValue(), LootPool[].class);
+                                    } catch (JsonSyntaxException error) {
+                                        L.warn("Couldn't load the \"pools\" properties of \"{}\", skipping it.", id);
+                                        L.error(error.getMessage());
+                                    }
+                                }
                             }
                         }
-                        map.put(p, new ContainerLootProperties(min, Math.max(min, max), chance));
+                        map.put(p, new ContainerLootProperties(min, Math.max(min, max), chance, pool));
                     }
                 }
                 CONTAINERS.put(name, new ContainerProperties(display, modelId, bC, mC, tt));
@@ -154,10 +169,13 @@ public class ContainerRegistry {
         public int min, max;
         public float chance;
 
-        public ContainerLootProperties(int min, int max, float chance) {
+        public LootPool[] pools;
+
+        public ContainerLootProperties(int min, int max, float chance, LootPool[] pools) {
             this.min = min;
             this.max = max;
             this.chance = chance;
+            this.pools = pools;
         }
     }
 }

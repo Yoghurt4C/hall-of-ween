@@ -1,0 +1,49 @@
+{
+  "name": "text.container.hidden_trove",
+  "model": "hallofween:hidden_trove",
+  "tooltips": [
+    "text.hidden_trove.tooltip"
+  ],
+  "injection_predicates": [
+    {
+      "starts_with": "blocks\\",
+      "ends_with": "_log",
+      "pools": [
+        {
+          "rolls": 1,
+          "entries": [
+            {
+              "type": "minecraft:item",
+              "functions": [
+                {
+                  "function": "set_nbt",
+                  "tag": "{bagId: hidden_trove}"
+                }
+              ],
+              "conditions": [
+                {
+                  "condition": "match_tool",
+                  "predicate": {
+                    "tag": "fabric:axes"
+                  }
+                },
+                {
+                  "condition": "random_chance",
+                  "chance": 0.95
+                },
+                {
+                  "condition": "entity_properties",
+                  "entity": "this",
+                  "predicate": {
+                    "type": "minecraft:player"
+                  }
+                }
+              ],
+              "name": "hallofween:container"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

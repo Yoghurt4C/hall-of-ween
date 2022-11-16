@@ -1,7 +1,9 @@
 {
   "name": "text.container.personalized_trick_or_treat_bag",
   "model": "hallofween:personalized_trick_or_treat_bag",
-  "tooltips": ["text.personalized_tot_bag.trick_a_tree"],
+  "tooltips": [
+    "text.personalized_tot_bag.trick_a_tree"
+  ],
   "injection_predicates": [
     {
       "ends_with": "wither",

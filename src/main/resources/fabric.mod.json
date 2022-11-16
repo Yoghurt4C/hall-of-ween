@@ -11,8 +11,12 @@
   "icon": "assets/hallofween/icon.png",
   "environment": "*",
   "entrypoints": {
-    "main": ["mods.hallofween.HallOfWeen"],
-    "client": ["mods.hallofween.client.HallOfWeenClient"]
+    "main": [
+      "mods.hallofween.HallOfWeen"
+    ],
+    "client": [
+      "mods.hallofween.client.HallOfWeenClient"
+    ]
   },
   "mixins": [
     "hallofween.mixins.json"
