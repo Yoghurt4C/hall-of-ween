@@ -1,5 +1,6 @@
 package mods.hallofween.network;
 
+import mods.hallofween.bags.BagHandler;
 import mods.hallofween.bags.BagHolder;
 import mods.hallofween.client.bags.BagData;
 import mods.hallofween.util.HallOfWeenUtil;
@@ -70,7 +71,7 @@ public class BagSlotChangeMessage {
     }
 
     public static void receive(MinecraftClient client, ClientPlayNetworkHandler handler, PacketByteBuf buf, PacketSender responseSender) {
-        BagHolder holder = BagData.getBagHolder(client.player);
+        BagHolder holder = BagHandler.getBagHolder(client.player);
         byte type = buf.readByte();
         int slot = buf.readInt();
         ItemStack stack, cursor;
@@ -91,7 +92,7 @@ public class BagSlotChangeMessage {
     }
 
     public static void receive(MinecraftServer server, ServerPlayerEntity player, ServerPlayNetworkHandler handler, PacketByteBuf buf, PacketSender responseSender) {
-        BagHolder holder = BagData.getBagHolder(player);
+        BagHolder holder = BagHandler.getBagHolder(player);
         byte type = buf.readByte();
         int slot = buf.readInt();
         ItemStack stack, cursor;

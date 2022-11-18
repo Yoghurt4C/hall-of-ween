@@ -28,6 +28,7 @@ public class Config {
             disableDefaultLootContainers, injectLootContainers,
             enableDiscoveryRecipes, faithfulRecipeSheets, recipeSheetXP,
             enableBagInventory = FabricLoader.getInstance().isDevelopmentEnvironment(),
+            generateDataWarning,
             enableREICompat;
 
     public static void tryInit() {
@@ -53,6 +54,8 @@ public class Config {
                         "faithfulRecipeSheets: Makes items drawn on Recipe Sheets pitch black. Setting to false gives them back their colours. [Side: CLIENT | Default: true]"),
                 Entry.of("recipeSheetXP", true,
                         "recipeSheetXP: Recipe Sheets grant experience when consumed, giving them a use when they're random drops. [Side: SERVER | Default: true]"),
+                Entry.of("generateDataWarning", true,
+                        "generateDataWarning: Creates a file called \"warning.txt\" inside the world/gw2/ folder. [Side: SERVER | Default: true]"),
                 Entry.of("enableREICompat", true,
                         "enableREICompat: Adds various bits and bobs to RoughlyEnoughItems to enhance your Recipe viewing experience. [Side: CLIENT | Default: true]")
         );

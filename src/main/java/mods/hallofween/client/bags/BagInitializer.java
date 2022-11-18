@@ -30,13 +30,19 @@ public interface BagInitializer {
             screen.setFocused(null);
             return ActionResult.PASS;
         });
+        ClothClientHooks.SCREEN_MOUSE_DRAGGED.register((minecraftClient, screen, v, v1, i, v2, v3) -> {
+            if (screen instanceof HandledScreen && BagData.widget.mouseDragged(v, v1, i, v2, v3)) {
+                return ActionResult.SUCCESS;
+            }
+            return ActionResult.PASS;
+        });
+        ClothClientHooks.SCREEN_MOUSE_SCROLLED.register((minecraftClient, screen, v, v1, v2) -> {
+            if (screen instanceof HandledScreen && BagData.widget.mouseScrolled(v, v1, v2)) {
+                return ActionResult.SUCCESS;
+            }
+            return ActionResult.PASS;
+        });
             /*
-            ClothClientHooks.SCREEN_MOUSE_DRAGGED.register((minecraftClient, screen, v, v1, i, v2, v3) -> {
-                if (screen instanceof HandledScreen && BagData.widget.mouseDragged(v, v1, i, v2, v3)) {
-                    return ActionResult.SUCCESS;
-                }
-                return ActionResult.PASS;
-            });
             ClothClientHooks.SCREEN_MOUSE_RELEASED.register((minecraftClient, screen, v, v1, i) -> {
                 if (screen instanceof HandledScreen && BagData.widget.mouseReleased(v, v1, i)) {
                     return ActionResult.SUCCESS;

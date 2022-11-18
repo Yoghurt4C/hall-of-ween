@@ -5,9 +5,13 @@
   "plugin": "mods.hallofween.mixin.plugins.HallOfWeenMixinPlugin",
   "compatibilityLevel": "JAVA_8",
   "mixins": [
+    "MinecraftServerAccessor",
+    "WorldSavePathAccessor",
     "bags.DefaultedListAccessor",
     "bags.PlayerInventoryBagHolder",
     "containers.LootManagerMixin",
+    "containers.LootPoolAccessor",
+    "containers.LootTableAccessor",
     "discovery.CraftingInventoryAccessor",
     "discovery.CraftingScreenHandlerAccessor",
     "discovery.PlayerScreenHandlerAccessor",

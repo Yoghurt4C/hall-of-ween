@@ -1,6 +1,5 @@
 {
   "name": "text.container.hidden_trove",
-  "model": "hallofween:hidden_trove",
   "tooltips": [
     "text.hidden_trove.tooltip"
   ],

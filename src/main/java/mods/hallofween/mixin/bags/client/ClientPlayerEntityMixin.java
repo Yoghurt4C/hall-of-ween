@@ -12,5 +12,6 @@ public abstract class ClientPlayerEntityMixin {
     @Inject(method = "closeScreen", at = @At("TAIL"))
     public void cleanup(CallbackInfo ctx) {
         BagData.slots = null;
+        BagData.widget = null;
     }
 }

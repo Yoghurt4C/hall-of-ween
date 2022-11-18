@@ -1,31 +1,39 @@
 package mods.hallofween;
 
 import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
-import mods.hallofween.item.ContainerItem;
+import me.shedaniel.cloth.api.common.events.v1.WorldSaveCallback;
+import me.shedaniel.cloth.api.utils.v1.GameInstanceUtils;
+import mods.hallofween.data.PlayerDataManager;
+import mods.hallofween.mixin.MinecraftServerAccessor;
+import mods.hallofween.mixin.WorldSavePathAccessor;
 import mods.hallofween.registry.ContainerRegistry;
-import mods.hallofween.registry.ContainerRegistry.ContainerLootProperties;
-import mods.hallofween.registry.ContainerRegistry.ContainerProperties;
 import mods.hallofween.registry.HallOfWeenBlocks;
 import mods.hallofween.registry.HallOfWeenItems;
 import mods.hallofween.registry.HallOfWeenNetworking;
+import mods.hallofween.util.ContainerUtils;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.client.itemgroup.FabricItemGroupBuilder;
+import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents;
 import net.fabricmc.fabric.api.loot.v1.FabricLootPoolBuilder;
 import net.fabricmc.fabric.api.loot.v1.event.LootTableLoadingCallback;
 import net.minecraft.item.ItemGroup;
 import net.minecraft.item.ItemStack;
 import net.minecraft.loot.ConstantLootTableRange;
-import net.minecraft.loot.UniformLootTableRange;
 import net.minecraft.loot.condition.RandomChanceLootCondition;
 import net.minecraft.loot.entry.ItemEntry;
 import net.minecraft.loot.function.SetCountLootFunction;
-import net.minecraft.loot.function.SetNbtLootFunction;
-import net.minecraft.nbt.CompoundTag;
+import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.Identifier;
 
-import java.util.Arrays;
+import java.io.BufferedWriter;
+import java.io.IOException;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.Map;
-import java.util.function.Predicate;
+import java.util.concurrent.CancellationException;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.CompletionException;
 
 import static mods.hallofween.util.HallOfWeenUtil.*;
 
@@ -35,7 +43,7 @@ public class HallOfWeen implements ModInitializer {
             .icon(() -> new ItemStack(getItem("testificate")))
             .build();
     public static ItemGroup CONTAINER_GROUP = FabricItemGroupBuilder.create(getId("containers"))
-            .icon(ContainerItem::getDefaultContainer)
+            .icon(ContainerUtils::getDefaultContainer)
             .build();
     public static ItemGroup DISCOVERY_GROUP = FabricItemGroupBuilder.create(getId("discovery"))
             .icon(() -> new ItemStack(getItem("recipe_sheet")))
@@ -48,6 +56,57 @@ public class HallOfWeen implements ModInitializer {
         HallOfWeenBlocks.init();
         HallOfWeenItems.init();
         HallOfWeenNetworking.init();
+        ContainerRegistry.init();
+
+        if (Config.generateDataWarning) {
+            ServerLifecycleEvents.SERVER_STARTED.register((server -> {
+                MinecraftServerAccessor acc = (MinecraftServerAccessor) GameInstanceUtils.getServer();
+                Path path = acc.getSession().getDirectory(WorldSavePathAccessor.constructor("gw2"));
+                try {
+                    if (Files.notExists(path)) Files.createDirectory(path);
+                    Path warning = path.resolve("warning.txt");
+                    CompletableFuture.runAsync(() -> {
+                        if (Files.notExists(warning)) {
+                            try (BufferedWriter bw = Files.newBufferedWriter(warning, StandardCharsets.UTF_8)) {
+                                bw.write("While these files are plaintext, please be very careful when changing anything inside.\n" +
+                                        "Any invalid change may result in data loss, corruption, irritation and spontaneous baldness.\n" +
+                                        "Make manual backups if you *really* need to interact with the files themselves.\n" +
+                                        "Do not edit without adult supervision. Consider yourself warned.\n\n" +
+                                        "P.S. This file is not deletable without config intervention.");
+                            } catch (IOException e) {
+                                L.warn("[Hall of Ween] Couldn't write warning file? Oops.");
+                                L.error(e.getMessage());
+                            }
+                        }
+                    }, acc.getWorkerExecutor());
+                } catch (IOException e) {
+                    L.warn("[Hall of Ween] Couldn't create a data folder within the world folder! Partial data loss imminent.");
+                    L.error(e.getMessage());
+                }
+            }));
+        }
+
+        WorldSaveCallback.EVENT.register((world, progressListener, flush) -> {
+            if (!world.isClient()) {
+                MinecraftServer server = world.getServer();
+                MinecraftServerAccessor acc = (MinecraftServerAccessor) server;
+                Path path = acc.getSession().getDirectory(WorldSavePathAccessor.constructor("gw2"));
+                try {
+                    if (Files.notExists(path)) Files.createDirectory(path);
+                    String b = CompletableFuture
+                            .supplyAsync(world::getPlayers, acc.getWorkerExecutor())
+                            .thenApplyAsync((players) -> PlayerDataManager.savePlayerData(path, world, players), acc.getWorkerExecutor())
+                            .join();
+                    L.info(b);
+                } catch (IOException e) {
+                    L.warn("[Hall of Ween] Couldn't create the gw2 data folder within the world folder!");
+                    L.error(e.getMessage());
+                } catch (CompletionException | CancellationException e) {
+                    L.warn("[Hall of Ween] Couldn't save player data.");
+                    L.error(e.getStackTrace());
+                }
+            }
+        });
 
         if (Config.injectTestificatesIntoLootTables) {
             LootTableLoadingCallback.EVENT.register((resourceManager, manager, id, supplier, setter) -> {
@@ -61,42 +120,5 @@ public class HallOfWeen implements ModInitializer {
                 }
             });
         }
-
-        if (Config.injectLootContainers) {
-            LootTableLoadingCallback.EVENT.register((resourceManager, manager, id, supplier, setter) -> {
-                for (Map.Entry<String, Map<Predicate<Identifier>, ContainerLootProperties>> e : ContainerRegistry.LOOT_PREDICATES.entrySet()) {
-                    for (Map.Entry<Predicate<Identifier>, ContainerLootProperties> in : e.getValue().entrySet()) {
-                        Predicate<Identifier> p = in.getKey();
-                        if (p.test(id)) {
-                            String name = e.getKey();
-                            ContainerProperties props = ContainerRegistry.CONTAINERS.get(name);
-                            ContainerLootProperties lootProps = in.getValue();
-                            if (lootProps.pools == null) {
-                                CompoundTag tag = new CompoundTag();
-                                tag.putString("bagId", name);
-                                if (props.bagColor != 0xFFFFFF) tag.putInt("bagColor", props.bagColor);
-                                if (props.overlayColor != 0xFFFFFF) tag.putInt("overlayColor", props.overlayColor);
-                                FabricLootPoolBuilder b = FabricLootPoolBuilder.builder()
-                                        .rolls(ConstantLootTableRange.create(1))
-                                        .with(ItemEntry.builder(getItem("container")))
-                                        .withFunction(SetNbtLootFunction.builder(tag).build())
-                                        .withFunction(lootProps.min == lootProps.max
-                                                ? SetCountLootFunction.builder(ConstantLootTableRange.create(lootProps.min)).build()
-                                                : SetCountLootFunction.builder(UniformLootTableRange.between(lootProps.min, lootProps.max)).build()
-                                        );
-                                if (lootProps.chance < 1f)
-                                    b.withCondition(RandomChanceLootCondition.builder(lootProps.chance).build());
-                                supplier.withPool(b.build());
-                            } else {
-                                supplier.withPools(Arrays.asList(lootProps.pools));
-                            }
-                            break;
-                        }
-                    }
-                }
-            });
-
-        }
-        ContainerRegistry.LOOT_PREDICATES.clear();
     }
 }

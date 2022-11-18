@@ -2,7 +2,7 @@ package mods.hallofween.item;
 
 import mods.hallofween.HallOfWeen;
 import mods.hallofween.registry.ContainerRegistry;
-import mods.hallofween.util.HallOfWeenUtil;
+import mods.hallofween.util.ContainerUtils;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.item.v1.FabricItemSettings;
@@ -13,15 +13,13 @@ import net.minecraft.item.ItemGroup;
 import net.minecraft.item.ItemStack;
 import net.minecraft.loot.LootTable;
 import net.minecraft.loot.context.LootContext;
-import net.minecraft.loot.context.LootContextParameters;
-import net.minecraft.loot.context.LootContextTypes;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.text.Text;
 import net.minecraft.text.TranslatableText;
 import net.minecraft.util.Formatting;
 import net.minecraft.util.Hand;
-import net.minecraft.util.Identifier;
 import net.minecraft.util.TypedActionResult;
 import net.minecraft.util.collection.DefaultedList;
 import net.minecraft.world.World;
@@ -45,28 +43,16 @@ public class ContainerItem extends Item {
         if (world.isClient())
             return TypedActionResult.fail(stack);
         else {
-            dropLoot(stack, (ServerWorld) world, user);
+            dropLoot(stack, (ServerWorld) world, (ServerPlayerEntity) user);
             return TypedActionResult.success(stack, true);
         }
     }
 
-    private void dropLoot(ItemStack stack, ServerWorld world, PlayerEntity player) {
-        if (stack.hasTag()) {
-            if (stack.getTag().contains("bagId")) {
-                String id = stack.getTag().getString("bagId");
-                if (CONTAINERS.containsKey(id)) {
-                    ContainerProperties bp = CONTAINERS.get(id);
-                    Identifier identifier = HallOfWeenUtil.getId("containers/" + id);
-                    LootTable lootTable = world.getServer().getLootManager().getTable(identifier);
-                    if (lootTable != LootTable.EMPTY) {
-                        LootContext ctx = new LootContext.Builder(world)
-                                .parameter(LootContextParameters.THIS_ENTITY, player)
-                                .random(world.random)
-                                .build(LootContextTypes.BARTER);
-                        lootTable.generateLoot(ctx, (s) -> player.inventory.offerOrDrop(world, s));
-                    }
-                }
-            }
+    private void dropLoot(ItemStack stack, ServerWorld world, ServerPlayerEntity player) {
+        LootTable table = ContainerUtils.getLootTableForContainer(stack, world);
+        if (table != LootTable.EMPTY) {
+            LootContext ctx = ContainerUtils.getLootContext(world, player);
+            table.generateLoot(ctx, (s) -> player.inventory.offerOrDrop(world, s));
         }
         stack.decrement(1);
     }
@@ -124,13 +110,5 @@ public class ContainerItem extends Item {
             }
         }
         return 0xFFFFFF;
-    }
-
-    public static ItemStack getDefaultContainer() {
-        ItemStack stack = new ItemStack(HallOfWeenUtil.getItem("container"));
-        stack.getOrCreateTag().putString("bagId", "trick_or_treat_bag");
-        stack.getTag().putInt("bagColor", 0xE3901D);
-        stack.getTag().putInt("overlayColor", 0x9F3C9F);
-        return stack;
     }
 }

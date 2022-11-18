@@ -2,6 +2,7 @@ package mods.hallofween.mixin.bags;
 
 import mods.hallofween.bags.BagHolder;
 import mods.hallofween.bags.BagInventory;
+import mods.hallofween.client.bags.BagData;
 import net.minecraft.entity.player.PlayerInventory;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;
@@ -17,12 +18,22 @@ public abstract class PlayerInventoryBagHolder implements BagHolder {
 
     @Inject(method = "<init>", at = @At("RETURN"))
     public void pooba(CallbackInfo ctx) {
-        bagInventory = new BagInventory();
+        if (BagData.temp == null) {
+            bagInventory = new BagInventory();
+        } else {
+            bagInventory = new BagInventory(BagData.temp);
+        }
     }
 
     @Unique
     @Override
     public BagInventory getBagInventory() {
         return bagInventory;
+    }
+
+    @Unique
+    @Override
+    public void setBagInventory(BagInventory inv) {
+        this.bagInventory = inv;
     }
 }

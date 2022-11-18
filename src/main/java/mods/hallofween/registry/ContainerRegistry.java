@@ -4,8 +4,17 @@ import com.google.gson.*;
 import it.unimi.dsi.fastutil.objects.Object2ObjectLinkedOpenHashMap;
 import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
 import mods.hallofween.Config;
+import net.fabricmc.fabric.api.loot.v1.FabricLootPoolBuilder;
+import net.fabricmc.fabric.api.loot.v1.event.LootTableLoadingCallback;
+import net.minecraft.loot.ConstantLootTableRange;
 import net.minecraft.loot.LootGsons;
 import net.minecraft.loot.LootPool;
+import net.minecraft.loot.UniformLootTableRange;
+import net.minecraft.loot.condition.RandomChanceLootCondition;
+import net.minecraft.loot.entry.ItemEntry;
+import net.minecraft.loot.function.SetCountLootFunction;
+import net.minecraft.loot.function.SetNbtLootFunction;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resource.ResourceManager;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.MathHelper;
@@ -14,17 +23,55 @@ import org.jetbrains.annotations.Nullable;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.function.Predicate;
 
 import static mods.hallofween.util.HallOfWeenUtil.L;
+import static mods.hallofween.util.HallOfWeenUtil.getItem;
 
 public class ContainerRegistry {
     public static Map<String, ContainerProperties> CONTAINERS = new Object2ObjectOpenHashMap<>();
     public static Map<String, Map<Predicate<Identifier>, ContainerLootProperties>> LOOT_PREDICATES = new Object2ObjectOpenHashMap<>();
+
+    public static void init() {
+        if (Config.injectLootContainers) {
+            LootTableLoadingCallback.EVENT.register((resourceManager, manager, id, supplier, setter) -> {
+                for (Map.Entry<String, Map<Predicate<Identifier>, ContainerLootProperties>> e : ContainerRegistry.LOOT_PREDICATES.entrySet()) {
+                    for (Map.Entry<Predicate<Identifier>, ContainerLootProperties> in : e.getValue().entrySet()) {
+                        Predicate<Identifier> p = in.getKey();
+                        if (p.test(id)) {
+                            String name = e.getKey();
+                            ContainerProperties props = ContainerRegistry.CONTAINERS.get(name);
+                            ContainerLootProperties lootProps = in.getValue();
+                            if (lootProps.pools == null) {
+                                CompoundTag tag = new CompoundTag();
+                                tag.putString("bagId", name);
+                                if (props.bagColor != 0xFFFFFF) tag.putInt("bagColor", props.bagColor);
+                                if (props.overlayColor != 0xFFFFFF) tag.putInt("overlayColor", props.overlayColor);
+                                FabricLootPoolBuilder b = FabricLootPoolBuilder.builder()
+                                        .rolls(ConstantLootTableRange.create(1))
+                                        .with(ItemEntry.builder(getItem("container")))
+                                        .withFunction(SetNbtLootFunction.builder(tag).build())
+                                        .withFunction(lootProps.min == lootProps.max
+                                                ? SetCountLootFunction.builder(ConstantLootTableRange.create(lootProps.min)).build()
+                                                : SetCountLootFunction.builder(UniformLootTableRange.between(lootProps.min, lootProps.max)).build()
+                                        );
+                                if (lootProps.chance < 1f)
+                                    b.withCondition(RandomChanceLootCondition.builder(lootProps.chance).build());
+                                supplier.withPool(b.build());
+                            } else {
+                                supplier.withPools(Arrays.asList(lootProps.pools));
+                            }
+                            break;
+                        }
+                    }
+                }
+            });
+
+        }
+
+        ContainerRegistry.LOOT_PREDICATES.clear();
+    }
 
     public static void load(ResourceManager manager) {
         CONTAINERS.clear();
@@ -41,13 +88,16 @@ public class ContainerRegistry {
                 JsonObject json = GSON.fromJson(new InputStreamReader(is), JsonObject.class);
 
                 String display = "";
-                Identifier modelId = null;
+                Identifier modelId;
                 List<String> tt = new ArrayList<>();
                 int bC = 0xFFFFFF, mC = 0xFFFFFF;
 
                 if (json.has("name")) {
                     display = json.get("name").getAsString();
+                } else {
+                    L.info("Container with the identifier \"{}\" lacks a name.", id.toString());
                 }
+
                 if (json.has("model")) {
                     String s = json.get("model").getAsString();
                     if (s.contains(":")) {
@@ -56,7 +106,10 @@ public class ContainerRegistry {
                     } else {
                         modelId = new Identifier("container/" + s);
                     }
+                } else {
+                    modelId = new Identifier(id.getNamespace(), "container/" + name);
                 }
+
                 if (json.has("tooltips")) {
                     for (JsonElement e : json.getAsJsonArray("tooltips")) {
                         tt.add(e.getAsString());

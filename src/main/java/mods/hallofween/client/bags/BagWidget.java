@@ -3,6 +3,12 @@ package mods.hallofween.client.bags;
 import com.google.common.collect.Sets;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.datafixers.util.Pair;
+import me.shedaniel.clothconfig2.ClothConfigInitializer;
+import me.shedaniel.clothconfig2.api.ScrollingContainer;
+import me.shedaniel.math.Rectangle;
+import me.shedaniel.rei.gui.modules.MenuEntry;
+import me.shedaniel.rei.gui.modules.entries.SubSubsetsMenuEntry;
+import mods.hallofween.bags.BagHandler;
 import mods.hallofween.bags.BagHolder;
 import mods.hallofween.bags.BagInventory;
 import mods.hallofween.mixin.bags.client.HandledScreenAccessor;
@@ -39,9 +45,7 @@ public class BagWidget extends Screen {
     private final int bagW = 218;
     private final int bagH = 97;
     private int bagX, bagY;
-
-    private final PlayerInventory playerInventory;
-    private final BagInventory bags;
+    private final MinecraftClient client;
     @Nullable
     protected Slot focusedSlot;
     @Nullable
@@ -50,26 +54,23 @@ public class BagWidget extends Screen {
     protected int y;
     protected final Set<Slot> cursorDragSlots;
     protected boolean cursorDragging;
-    @Nullable
-    private Slot touchDragSlotStart;
-    private boolean touchIsRightClickDrag;
-    private ItemStack touchDragStack;
-    private int heldButtonType;
-    private int heldButtonCode;
-    private boolean cancelNextRelease;
-    private int draggedStackRemainder;
-    private long lastButtonClickTime;
-    private int lastClickedButton;
-    private boolean doubleClicking;
-    private ItemStack quickMovingStack;
+
+    private final ScrollingContainer scroll = new ScrollingContainer() {
+        @Override public Rectangle getBounds() {
+            return new Rectangle(bagX, bagY, bagW, bagH);
+        }
+
+        @Override public int getMaxScrollHeight() {
+            return 500;
+        }
+    };
 
     public BagWidget(Text title, MinecraftClient client, HandledScreen<?> parent) {
         super(title);
         HandledScreenAccessor acc = (HandledScreenAccessor) parent;
         this.x = acc.getX();
         this.y = acc.getY();
-        this.playerInventory = client.player.inventory;
-        this.bags = ((BagHolder) this.playerInventory).getBagInventory();
+        this.client = client;
         this.cursorDragSlots = Sets.newHashSet();
     }
 
@@ -79,17 +80,20 @@ public class BagWidget extends Screen {
         bagY = (this.client.getWindow().getScaledHeight() - this.bagH) / 2;
         int bX = bagX + 4, bY = bagY + 23, contX = bX + 23, contY = bY;
         slots = new ArrayList<>();
-        for (int i = 0; i < 10; i++) {
-            slots.add(new Slot(bags, i, bX, bY));
-            bY += 18;
-        }
-        for (int i = 10; i < bags.size(); ) {
-            slots.add(new Slot(bags, i, contX, contY));
-            contX += 18;
-            i++;
-            if (i % 10 == 0) {
-                contX = bX + 23;
-                contY += 18;
+        if (client.player != null) {
+            BagInventory bags = BagHandler.getBagHolder(client.player).getBagInventory();
+            for (int i = 0; i < 10; i++) {
+                slots.add(new Slot(bags, i, bX, bY));
+                bY += 18;
+            }
+            for (int i = 10; i < bags.size(); ) {
+                slots.add(new Slot(bags, i, contX, contY));
+                contX += 18;
+                i++;
+                if (i % 10 == 0) {
+                    contX = bX + 23;
+                    contY += 18;
+                }
             }
         }
     }
@@ -105,6 +109,8 @@ public class BagWidget extends Screen {
         drawBackground(matrices, mouseX, mouseY);
         focusedSlot = null;
         drawForeground(matrices, mouseX, mouseY);
+        scroll.renderScrollBar();
+        scroll.updatePosition(delta);
         if (this.focusedSlot != null && focusedSlot.hasStack()) {
             this.client.currentScreen.renderTooltip(matrices, this.client.currentScreen.getTooltipFromItem(focusedSlot.getStack()), mouseX, mouseY);
         }
@@ -140,32 +146,6 @@ public class BagWidget extends Screen {
         int i = slot.x;
         int j = slot.y;
         ItemStack itemStack = slot.getStack();
-        boolean bl = false;
-        boolean bl2 = slot == this.touchDragSlotStart && !this.touchDragStack.isEmpty() && !this.touchIsRightClickDrag;
-        ItemStack itemStack2 = this.client.player.inventory.getCursorStack();
-        String string = null;
-        if (slot == this.touchDragSlotStart && !this.touchDragStack.isEmpty() && this.touchIsRightClickDrag && !itemStack.isEmpty()) {
-            itemStack = itemStack.copy();
-            itemStack.setCount(itemStack.getCount() / 2);
-        } else if (this.cursorDragging && this.cursorDragSlots.contains(slot) && !itemStack2.isEmpty()) {
-            if (this.cursorDragSlots.size() == 1) {
-                return;
-            }
-
-            if (ScreenHandler.canInsertItemIntoSlot(slot, itemStack2, true)/*todo && this.handler.canInsertIntoSlot(slot)*/) {
-                itemStack = itemStack2.copy();
-                bl = true;
-                ScreenHandler.calculateStackSize(this.cursorDragSlots, this.heldButtonType, itemStack, slot.getStack().isEmpty() ? 0 : slot.getStack().getCount());
-                int k = Math.min(itemStack.getMaxCount(), slot.getMaxItemCount(itemStack));
-                if (itemStack.getCount() > k) {
-                    string = Formatting.YELLOW.toString() + k;
-                    itemStack.setCount(k);
-                }
-            } else {
-                this.cursorDragSlots.remove(slot);
-                this.calculateOffset();
-            }
-        }
 
         this.setZOffset(100);
         this.itemRenderer.zOffset = 100.0F;
@@ -175,19 +155,12 @@ public class BagWidget extends Screen {
                 Sprite sprite = this.client.getSpriteAtlas(pair.getFirst()).apply(pair.getSecond());
                 this.client.getTextureManager().bindTexture(sprite.getAtlas().getId());
                 drawSprite(matrices, i, j, this.getZOffset(), 16, 16, sprite);
-                bl2 = true;
             }
         }
 
-        if (!bl2) {
-            if (bl) {
-                fill(matrices, i, j, i + 16, j + 16, -2130706433);
-            }
-
-            RenderSystem.enableDepthTest();
-            this.itemRenderer.renderInGuiWithOverrides(this.client.player, itemStack, i, j);
-            this.itemRenderer.renderGuiItemOverlay(this.textRenderer, itemStack, i, j, string);
-        }
+        RenderSystem.enableDepthTest();
+        this.itemRenderer.renderInGuiWithOverrides(this.client.player, itemStack, i, j);
+        this.itemRenderer.renderGuiItemOverlay(this.textRenderer, itemStack, i, j, null);
 
         this.itemRenderer.zOffset = 0.0F;
         this.setZOffset(0);
@@ -198,32 +171,6 @@ public class BagWidget extends Screen {
             this.renderTooltip(matrices, this.focusedSlot.getStack(), x, y);
         }
 
-    }
-
-    private void calculateOffset() {
-        ItemStack itemStack = this.client.player.inventory.getCursorStack();
-        if (!itemStack.isEmpty() && this.cursorDragging) {
-            if (this.heldButtonType == 2) {
-                this.draggedStackRemainder = itemStack.getMaxCount();
-            } else {
-                this.draggedStackRemainder = itemStack.getCount();
-
-                ItemStack itemStack2;
-                int i;
-                for (Iterator var2 = this.cursorDragSlots.iterator(); var2.hasNext(); this.draggedStackRemainder -= itemStack2.getCount() - i) {
-                    Slot slot = (Slot) var2.next();
-                    itemStack2 = itemStack.copy();
-                    ItemStack itemStack3 = slot.getStack();
-                    i = itemStack3.isEmpty() ? 0 : itemStack3.getCount();
-                    ScreenHandler.calculateStackSize(this.cursorDragSlots, this.heldButtonType, itemStack2, i);
-                    int j = Math.min(itemStack2.getMaxCount(), slot.getMaxItemCount(itemStack2));
-                    if (itemStack2.getCount() > j) {
-                        itemStack2.setCount(j);
-                    }
-                }
-
-            }
-        }
     }
 
     protected boolean isPointOverSlot(Slot slot, int width, int height, double pointX, double pointY) {
@@ -238,12 +185,30 @@ public class BagWidget extends Screen {
     @Override
     public boolean mouseClicked(double mouseX, double mouseY, int button) {
         if (isMouseOver(mouseX, mouseY)) {
-            if (focusedSlot != null) {
+            if (scroll.updateDraggingState(mouseX, mouseY, button))
+                return true;
+            else if (focusedSlot != null) {
                 int index = ((SlotAccessor) focusedSlot).getIndex();
                 new BagSlotChangeMessage(index).send();
             }
             return true;
         }
         return false;
+    }
+
+    @Override
+    public boolean mouseDragged(double mouseX, double mouseY, int button, double deltaX, double deltaY) {
+        if (scroll.mouseDragged(mouseX, mouseY, button, deltaX, deltaY))
+            return true;
+        return super.mouseDragged(mouseX, mouseY, button, deltaX, deltaY);
+    }
+
+    @Override
+    public boolean mouseScrolled(double mouseX, double mouseY, double amount) {
+        if (isMouseOver(mouseX, mouseY)) {
+            scroll.offset(ClothConfigInitializer.getScrollStep() * -amount * (Screen.hasAltDown() ? 3 : 1), true);
+            return true;
+        }
+        return super.mouseScrolled(mouseX, mouseY, amount);
     }
 }
