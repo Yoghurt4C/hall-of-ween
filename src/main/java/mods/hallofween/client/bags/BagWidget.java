@@ -1,69 +1,40 @@
 package mods.hallofween.client.bags;
 
-import com.google.common.collect.Sets;
-import com.mojang.blaze3d.systems.RenderSystem;
-import com.mojang.datafixers.util.Pair;
 import me.shedaniel.clothconfig2.ClothConfigInitializer;
+import me.shedaniel.clothconfig2.api.ScissorsHandler;
 import me.shedaniel.clothconfig2.api.ScrollingContainer;
 import me.shedaniel.math.Rectangle;
-import me.shedaniel.rei.gui.modules.MenuEntry;
-import me.shedaniel.rei.gui.modules.entries.SubSubsetsMenuEntry;
 import mods.hallofween.bags.BagHandler;
-import mods.hallofween.bags.BagHolder;
 import mods.hallofween.bags.BagInventory;
 import mods.hallofween.mixin.bags.client.HandledScreenAccessor;
-import mods.hallofween.mixin.bags.client.SlotAccessor;
 import mods.hallofween.network.BagSlotChangeMessage;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.screen.ingame.HandledScreen;
-import net.minecraft.client.texture.Sprite;
 import net.minecraft.client.util.math.MatrixStack;
-import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.item.ItemStack;
-import net.minecraft.screen.ScreenHandler;
 import net.minecraft.screen.slot.Slot;
 import net.minecraft.text.Text;
-import net.minecraft.util.Formatting;
 import net.minecraft.util.Identifier;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.Set;
+import java.util.List;
 
-import static mods.hallofween.client.bags.BagData.slots;
-import static mods.hallofween.client.bags.BagData.widget;
 import static mods.hallofween.util.HallOfWeenUtil.getId;
 
-/**
- * Most of this class is just vanilla copy with minor edits and shortcuts here and there.
- * Why is everything in HandledScreen private?
- */
 public class BagWidget extends Screen {
     private final Identifier GUI = getId("textures/gui/inventory.png");
-    private final int bagW = 218;
-    private final int bagH = 97;
-    private int bagX, bagY;
+    private Rectangle bounds, contBounds;
+    private int rows, columns;
     private final MinecraftClient client;
     @Nullable
-    protected Slot focusedSlot;
+    protected BagSlot focusedSlot;
     @Nullable
     private Slot lastClickedSlot;
     protected int x;
     protected int y;
-    protected final Set<Slot> cursorDragSlots;
-    protected boolean cursorDragging;
-
-    private final ScrollingContainer scroll = new ScrollingContainer() {
-        @Override public Rectangle getBounds() {
-            return new Rectangle(bagX, bagY, bagW, bagH);
-        }
-
-        @Override public int getMaxScrollHeight() {
-            return 500;
-        }
-    };
+    private List<BagSlot> slots;
+    protected ScrollingContainer scroll;
 
     public BagWidget(Text title, MinecraftClient client, HandledScreen<?> parent) {
         super(title);
@@ -71,46 +42,51 @@ public class BagWidget extends Screen {
         this.x = acc.getX();
         this.y = acc.getY();
         this.client = client;
-        this.cursorDragSlots = Sets.newHashSet();
     }
 
     @Override
     public void init() {
-        bagX = this.x - this.bagW;
-        bagY = (this.client.getWindow().getScaledHeight() - this.bagH) / 2;
-        int bX = bagX + 4, bY = bagY + 23, contX = bX + 23, contY = bY;
-        slots = new ArrayList<>();
+        int bagW = 218, bagH = 97,
+                bagX = this.x - bagW,
+                bagY = (this.client.getWindow().getScaledHeight() - bagH) / 2;
+        this.bounds = new Rectangle(bagX, bagY, bagW, bagH);
+        //todo measure exact numbers after new texture
+        this.contBounds = new Rectangle(bagX + 27, bagY + 23, bagW - 30, bagH - 25);
+        this.rows = 4;
+        this.columns = 10;
+        this.slots = new ArrayList<>();
+        int row = 0, column = 0;
         if (client.player != null) {
             BagInventory bags = BagHandler.getBagHolder(client.player).getBagInventory();
             for (int i = 0; i < 10; i++) {
-                slots.add(new Slot(bags, i, bX, bY));
-                bY += 18;
+                slots.add(new BagSlot(this, bags, i, 18, 18, i, 0));
             }
-            for (int i = 10; i < bags.size(); ) {
-                slots.add(new Slot(bags, i, contX, contY));
-                contX += 18;
-                i++;
-                if (i % 10 == 0) {
-                    contX = bX + 23;
-                    contY += 18;
+            for (int i = 10; i < bags.size(); i++) {
+                slots.add(new BagSlot(this, bags, i, 18, 18, row, column));
+                column++;
+                if (column % this.columns == 0) {
+                    row++;
+                    column = 0;
                 }
             }
         }
+        this.scroll = new BagScrollingContainer(contBounds, row + 1);
     }
 
     @Override
     public void removed() {
         super.removed();
-        widget = null;
+        BagData.WIDGET = null;
+        BagData.cachedScroll = this.scroll.scrollAmount;
     }
 
     @Override
     public void render(MatrixStack matrices, int mouseX, int mouseY, float delta) {
         drawBackground(matrices, mouseX, mouseY);
-        focusedSlot = null;
-        drawForeground(matrices, mouseX, mouseY);
-        scroll.renderScrollBar();
-        scroll.updatePosition(delta);
+        this.focusedSlot = null;
+        drawForeground(matrices, mouseX, mouseY, delta);
+        this.scroll.renderScrollBar();
+        this.scroll.updatePosition(delta);
         if (this.focusedSlot != null && focusedSlot.hasStack()) {
             this.client.currentScreen.renderTooltip(matrices, this.client.currentScreen.getTooltipFromItem(focusedSlot.getStack()), mouseX, mouseY);
         }
@@ -118,68 +94,40 @@ public class BagWidget extends Screen {
 
     public void drawBackground(MatrixStack matrices, int mouseX, int mouseY) {
         this.client.getTextureManager().bindTexture(GUI);
-        this.drawTexture(matrices, bagX, bagY, 0, 0, 256, 256);
+        this.drawTexture(matrices, bounds.x, bounds.y, 0, 0, 256, 256);
     }
 
-    public void drawForeground(MatrixStack matrices, int mouseX, int mouseY) {
-        for (Slot slot : slots) {
-            renderSlot(matrices, slot, mouseX, mouseY);
+    public void drawForeground(MatrixStack matrices, int mouseX, int mouseY, float delta) {
+        int bX = bounds.x + 4, bY = bounds.y + 23, contX = contBounds.x, contY = contBounds.y;
+        for (int i = 0; i < 10; i++) {
+            BagSlot slot = slots.get(i);
+            slot.updateInformation(bX, bY, true, true, true, 18);
+            slot.render(matrices, mouseX, mouseY, delta);
+            bY += slot.getEntryHeight();
         }
-    }
-
-    public void renderSlot(MatrixStack matrices, Slot slot, int mouseX, int mouseY) {
-        matrices.push();
-        RenderSystem.disableLighting();
-        RenderSystem.disableDepthTest();
-        this.drawSlot(matrices, slot);
-        if (this.isPointOverSlot(slot, 16, 16, mouseX, mouseY) && slot.doDrawHoveringEffect()) {
-            this.focusedSlot = slot;
-            RenderSystem.disableDepthTest();
-            RenderSystem.colorMask(true, true, true, false);
-            this.fillGradient(matrices, slot.x, slot.y, slot.x + 16, slot.y + 16, -2130706433, -2130706433);
-            RenderSystem.colorMask(true, true, true, true);
-        }
-        matrices.pop();
-    }
-
-    private void drawSlot(MatrixStack matrices, Slot slot) {
-        int i = slot.x;
-        int j = slot.y;
-        ItemStack itemStack = slot.getStack();
-
-        this.setZOffset(100);
-        this.itemRenderer.zOffset = 100.0F;
-        if (itemStack.isEmpty() && slot.doDrawHoveringEffect()) {
-            Pair<Identifier, Identifier> pair = slot.getBackgroundSprite();
-            if (pair != null) {
-                Sprite sprite = this.client.getSpriteAtlas(pair.getFirst()).apply(pair.getSecond());
-                this.client.getTextureManager().bindTexture(sprite.getAtlas().getId());
-                drawSprite(matrices, i, j, this.getZOffset(), 16, 16, sprite);
+        ScissorsHandler.INSTANCE.scissor(scroll.getScissorBounds());
+        for (int i = 10; i < this.slots.size(); i++) {
+            BagSlot slot = slots.get(i);
+            //boolean containsMouse = cursor && mouseY >= currentY && mouseY < currentY + slot.getEntryHeight();
+            slot.updateInformation(contX, (int) (contY - scroll.scrollAmount), true, true, true, 18);
+            boolean rendering = slot.y + slot.getEntryHeight() >= contBounds.y && slot.y <= contBounds.getMaxY();
+            contX += slot.getEntryWidth();
+            if (slot.column == 9) {
+                contX = bX + 23;
+                contY += slot.getEntryHeight();
             }
+            if (rendering) slot.render(matrices, mouseX, mouseY, delta);
         }
-
-        RenderSystem.enableDepthTest();
-        this.itemRenderer.renderInGuiWithOverrides(this.client.player, itemStack, i, j);
-        this.itemRenderer.renderGuiItemOverlay(this.textRenderer, itemStack, i, j, null);
-
-        this.itemRenderer.zOffset = 0.0F;
-        this.setZOffset(0);
+        ScissorsHandler.INSTANCE.removeLastScissor();
     }
 
-    protected void drawMouseoverTooltip(MatrixStack matrices, int x, int y) {
-        if (this.client.player.inventory.getCursorStack().isEmpty() && this.focusedSlot != null && this.focusedSlot.hasStack()) {
-            this.renderTooltip(matrices, this.focusedSlot.getStack(), x, y);
-        }
-
-    }
-
-    protected boolean isPointOverSlot(Slot slot, int width, int height, double pointX, double pointY) {
-        return pointX >= slot.x - 1 && pointX < slot.x + width + 1 && pointY >= slot.y - 1 && pointY < slot.y + height + 1;
+    public Rectangle getBounds() {
+        return this.bounds;
     }
 
     @Override
     public boolean isMouseOver(double pointX, double pointY) {
-        return pointX >= bagX && pointX <= bagX + bagW && pointY >= bagY && pointY <= bagY + bagH;
+        return pointX >= bounds.x && pointX <= bounds.getMaxX() && pointY >= bounds.y && pointY <= bounds.getMaxY();
     }
 
     @Override
@@ -188,7 +136,7 @@ public class BagWidget extends Screen {
             if (scroll.updateDraggingState(mouseX, mouseY, button))
                 return true;
             else if (focusedSlot != null) {
-                int index = ((SlotAccessor) focusedSlot).getIndex();
+                int index = focusedSlot.slot;
                 new BagSlotChangeMessage(index).send();
             }
             return true;
@@ -210,5 +158,42 @@ public class BagWidget extends Screen {
             return true;
         }
         return super.mouseScrolled(mouseX, mouseY, amount);
+    }
+
+    public static class BagScrollingContainer extends ScrollingContainer {
+        private final Rectangle bounds;
+        private final int rows;
+
+        protected BagScrollingContainer(Rectangle bounds, int rows) {
+            this.scrollAmount = BagData.cachedScroll;
+            this.bounds = bounds;
+            this.rows = rows;
+        }
+
+        @Override public Rectangle getBounds() {
+            return bounds;
+        }
+
+        @Override public int getMaxScrollHeight() {
+            return this.rows * 18;
+        }
+
+        @Override public boolean updateDraggingState(double mouseX, double mouseY, int button) {
+            if (this.hasScrollBar()) {
+                double height = this.getMaxScrollHeight();
+                Rectangle bounds = this.getBounds();
+                int actualHeight = bounds.height;
+                if (height > (double) actualHeight && mouseY >= (double) bounds.y && mouseY <= (double) bounds.getMaxY()) {
+                    double scrollbarPositionMinX = this.getScrollBarX();
+                    if (mouseX >= scrollbarPositionMinX - 1.0 & mouseX <= scrollbarPositionMinX + 8.0) {
+                        this.draggingScrollBar = true;
+                        return true;
+                    }
+                }
+
+                this.draggingScrollBar = false;
+            }
+            return false;
+        }
     }
 }

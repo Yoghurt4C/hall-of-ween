@@ -22,6 +22,7 @@ public interface BagHandler {
     static BagHolder getBagHolder(PlayerEntity player) {
         return ((BagHolder) player.inventory);
     }
+
     static void loadPlayerData(JsonArray data, ServerPlayerEntity player) {
         BagInventory inv = new BagInventory();
         int i = 0;

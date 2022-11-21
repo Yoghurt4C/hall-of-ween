@@ -16,6 +16,9 @@
     ],
     "client": [
       "mods.hallofween.client.HallOfWeenClient"
+    ],
+    "rei_plugins": [
+      "mods.hallofween.compat.rei.GW2REIPlugin"
     ]
   },
   "mixins": [

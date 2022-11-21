@@ -85,8 +85,8 @@ public class BagSlotChangeMessage {
                 cursor = buf.readItemStack();
                 holder.getBagInventory().resolveSetStack(slot, stack, client.player);
                 client.player.inventory.setCursorStack(cursor);
-                BagData.slots.get(slot).setStack(stack);
-                if (slot < 10) BagData.widget.init();
+                //BagData.WIDGET.children().get(slot).setStack(stack);
+                if (slot < 10) BagData.WIDGET.init();
                 break;
         }
     }
@@ -96,24 +96,23 @@ public class BagSlotChangeMessage {
         byte type = buf.readByte();
         int slot = buf.readInt();
         ItemStack stack, cursor;
-        PacketByteBuf response;
         switch (type) {
             case 0:
                 stack = holder.getBagInventory().getStack(slot).copy();
                 cursor = player.inventory.getCursorStack().copy();
-                holder.getBagInventory().resolveSetStack(slot, cursor, player);
+                slot = holder.getBagInventory().resolveSetStack(slot, cursor, player);
                 player.inventory.setCursorStack(stack);
 
                 new BagSlotChangeMessage(slot, holder.getBagInventory().getStack(slot), player.inventory.getCursorStack()).send(player);
                 break;
             case 1:
                 stack = buf.readItemStack();
-                holder.getBagInventory().resolveSetStack(slot, stack, player);
+                slot = holder.getBagInventory().resolveSetStack(slot, stack, player);
                 break;
             case 2:
                 stack = buf.readItemStack();
                 cursor = buf.readItemStack();
-                holder.getBagInventory().resolveSetStack(slot, stack, player);
+                slot = holder.getBagInventory().resolveSetStack(slot, stack, player);
                 player.inventory.setCursorStack(cursor);
 
                 new BagSlotChangeMessage(slot, holder.getBagInventory().getStack(slot), player.inventory.getCursorStack()).send(player);

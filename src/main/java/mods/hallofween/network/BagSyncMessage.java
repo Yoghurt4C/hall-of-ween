@@ -75,11 +75,11 @@ public class BagSyncMessage {
                 for (int i = 0; i < size; i++) list.add(buf.readItemStack());
                 DefaultedList<ItemStack> fin = DefaultedListAccessor.constructor(list, ItemStack.EMPTY);
                 if (client.player == null) {
-                    BagData.temp = fin;
+                    BagData.TEMP = fin;
                 } else {
                     BagHandler.getBagHolder(client.player).setBagInventory(new BagInventory(fin));
                 }
-                if (BagData.widget != null) BagData.widget.init();
+                if (BagData.WIDGET != null) BagData.WIDGET.init();
                 break;
             case 1:
                 slot = buf.readInt();

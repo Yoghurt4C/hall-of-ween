@@ -2,7 +2,6 @@ package mods.hallofween.registry;
 
 import mods.hallofween.Config;
 import mods.hallofween.bags.BagHandler;
-import mods.hallofween.client.bags.BagData;
 import mods.hallofween.data.PlayerDataManager;
 import mods.hallofween.network.BagSlotChangeMessage;
 import mods.hallofween.network.BagSyncMessage;

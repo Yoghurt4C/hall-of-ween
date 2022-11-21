@@ -18,10 +18,10 @@ public abstract class PlayerInventoryBagHolder implements BagHolder {
 
     @Inject(method = "<init>", at = @At("RETURN"))
     public void pooba(CallbackInfo ctx) {
-        if (BagData.temp == null) {
+        if (BagData.TEMP == null) {
             bagInventory = new BagInventory();
         } else {
-            bagInventory = new BagInventory(BagData.temp);
+            bagInventory = new BagInventory(BagData.TEMP);
         }
     }
 

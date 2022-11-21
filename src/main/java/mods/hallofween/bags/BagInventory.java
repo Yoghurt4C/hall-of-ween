@@ -27,15 +27,21 @@ public class BagInventory implements Inventory {
 
     public BagInventory(DefaultedList<ItemStack> contents) {
         this.contents = contents;
-        BagData.temp = null;
+        BagData.TEMP = null;
     }
 
-    public void setBag(int slot, ItemStack bag, PlayerEntity player) {
+    public int setBag(int slot, ItemStack bag, PlayerEntity player) {
         ItemStack stack = contents.get(slot);
         if (bag.getItem() instanceof BagItem) {
+            for (int i = 0; i < slot; i++) {
+                if (contents.get(i).isEmpty()) {
+                    slot = i;
+                    break;
+                }
+            }
             this.contents.set(slot, bag);
             int pointer = getBagContentsStart(slot);
-            if (pointer > contents.size() - 1) {
+            if (pointer >= contents.size() - 1) {
                 contents.addAll(pointer, DefaultedList.ofSize(getBagSize(bag), ItemStack.EMPTY));
             } else {
                 if (stack.getItem() instanceof BagItem && pointer + getBagSize(stack) <= contents.size()) {
@@ -49,11 +55,13 @@ public class BagInventory implements Inventory {
         } else if (bag.equals(ItemStack.EMPTY) && player != null && !player.world.isClient()) {
             this.removeBag(slot, player);
         }
+        return slot;
     }
 
-    public void resolveSetStack(int slot, ItemStack stack, PlayerEntity player) {
-        if (slot < 10) setBag(slot, stack, player);
+    public int resolveSetStack(int slot, ItemStack stack, PlayerEntity player) {
+        if (slot < 10) return setBag(slot, stack, player);
         else setStack(slot, stack);
+        return slot;
     }
 
     private int getBagContentsStart(int slot) {
