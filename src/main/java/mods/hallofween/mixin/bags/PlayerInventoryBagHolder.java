@@ -3,8 +3,11 @@ package mods.hallofween.mixin.bags;
 import mods.hallofween.bags.BagHolder;
 import mods.hallofween.bags.BagInventory;
 import mods.hallofween.client.bags.BagData;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
+import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
@@ -13,6 +16,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 @Mixin(PlayerInventory.class)
 public abstract class PlayerInventoryBagHolder implements BagHolder {
 
+    @Shadow @Final public PlayerEntity player;
     @Unique
     public BagInventory bagInventory;
 
@@ -22,6 +26,7 @@ public abstract class PlayerInventoryBagHolder implements BagHolder {
             bagInventory = new BagInventory();
         } else {
             bagInventory = new BagInventory(BagData.TEMP);
+            BagData.TEMP = null;
         }
     }
 

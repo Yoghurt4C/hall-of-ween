@@ -63,6 +63,9 @@
   "entity.hallofween.toilet_paper": "Toilet Paper",
   "item.hallofween.recipe_sheet": "Recipe Sheet",
   "text.hallofween.rei_advancement": "This recipe hasn't been discovered yet.",
+  "text.gw2_api.sync_attempt": "Pinging the GW2 API for account data, the client may lock up for a bit...",
+  "text.gw2_api.sync_finish": "Successfully retrieved supported account data from the GW2 API.",
+  "text.gw2_api.sync_failure": "Couldn't retrieve data from the GW2 API. Check the console for details.",
   "itemGroup.hallofween.hallofween": "Hall of Ween",
   "itemGroup.hallofween.containers": "Hall of Ween: Containers",
   "itemGroup.hallofween.discovery": "Hall of Ween: Recipe Sheets"

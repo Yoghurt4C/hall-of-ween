@@ -12,7 +12,5 @@ import java.util.concurrent.Executor;
 public interface MinecraftServerAccessor {
     @Accessor @Final LevelStorage.Session getSession();
 
-    @Accessor @Final Thread getServerThread();
-
     @Accessor @Final Executor getWorkerExecutor();
 }

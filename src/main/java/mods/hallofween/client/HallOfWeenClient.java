@@ -2,6 +2,8 @@ package mods.hallofween.client;
 
 import mods.hallofween.Config;
 import mods.hallofween.client.bags.BagInitializer;
+import mods.hallofween.data.PlayerData;
+import mods.hallofween.data.PlayerDataManager;
 import mods.hallofween.entity.ThrownRottenEgg;
 import mods.hallofween.entity.ThrownToiletPaper;
 import mods.hallofween.events.ResourceReloadEvents;
@@ -9,6 +11,7 @@ import mods.hallofween.item.ContainerItem;
 import mods.hallofween.registry.HallOfWeenEntities;
 import mods.hallofween.registry.HallOfWeenNetworking;
 import net.fabricmc.api.ClientModInitializer;
+import net.fabricmc.fabric.api.client.command.v1.ClientCommandManager;
 import net.fabricmc.fabric.api.client.model.ModelLoadingRegistry;
 import net.fabricmc.fabric.api.client.rendereregistry.v1.EntityRendererRegistry;
 import net.fabricmc.fabric.api.client.rendering.v1.BuiltinItemRendererRegistry;
@@ -23,6 +26,8 @@ import static mods.hallofween.util.HallOfWeenUtil.getId;
 import static mods.hallofween.util.HallOfWeenUtil.getItem;
 
 public class HallOfWeenClient implements ClientModInitializer {
+    public static PlayerData CLIENT_DATA;
+
     @Override
     public void onInitializeClient() {
         BuiltinItemRendererRegistry.INSTANCE.register(getItem("testificate"), new TestificateRenderer());
@@ -53,6 +58,8 @@ public class HallOfWeenClient implements ClientModInitializer {
             ContainerRenderer.MISSINGNO = models.getModelManager().getModel(new ModelIdentifier(getId("container/missingno"), "inventory"));
             RecipeSheetRenderer.sheetModel = models.getModelManager().getModel(new ModelIdentifier(getId("recipe_sheet_base"), "inventory"));
         });
+
+        ClientCommandManager.DISPATCHER.register(ClientCommandManager.literal("gw2_auth").executes(PlayerDataManager::authCommand));
 
         //todo
         if (Config.enableBagInventory) {

@@ -28,8 +28,11 @@ public class Config {
             disableDefaultLootContainers, injectLootContainers,
             enableDiscoveryRecipes, faithfulRecipeSheets, recipeSheetXP,
             enableBagInventory = FabricLoader.getInstance().isDevelopmentEnvironment(),
+            enableOfficialTitles, enableCustomTitles,
             generateDataWarning,
             enableREICompat;
+
+    public static String gw2ApiKey;
 
     public static void tryInit() {
         if (!isInitialized) init();
@@ -39,13 +42,16 @@ public class Config {
         String filename = "hallofween.properties";
         ImmutableSet<? extends Entry<? extends Serializable>> entries = ImmutableSet.of(
                 Entry.of("testificateChance", 0.15f,
-                        "testificateChance: How likely it is for a Captive Testificate to appear in a structure chest.\n#You may want to reduce this if you have a lot of structure mods. [Side: SERVER | Default: 0.15f]"),
+                        "testificateChance: How likely it is for a Captive Testificate to appear in a structure chest.\n" +
+                                "#You may want to reduce this if you have a lot of structure mods. [Side: SERVER | Default: 0.15f]"),
                 Entry.of("annoyingTestificates", true,
                         "annoyingTestificates: Captive Testificates periodically annoy you. [Side: CLIENT | Default: true]"),
                 Entry.of("injectTestificatesIntoLootTables", true,
-                        "injectTestificatesIntoLootTables: Automatically adds Captive Testificates into every non-village structure chest.\n#Disable this if you want precise control using something like KubeJS. [Side: SERVER | Default: true]"),
+                        "injectTestificatesIntoLootTables: Automatically adds Captive Testificates into every non-village structure chest.\n" +
+                                "#Disable this if you want precise control using something like KubeJS. [Side: SERVER | Default: true]"),
                 Entry.of("disableDefaultLootContainers", false,
-                        "disableDefaultLootContainers: Disables the default Loot Containers.\n#Their Loot Tables are still loaded by the game, so you'll have to clean that up yourself. [Side: SERVER | Default: false]"),
+                        "disableDefaultLootContainers: Disables the default Loot Containers.\n" +
+                                "#Their Loot Tables are still loaded by the game, so you'll have to clean that up yourself. [Side: SERVER | Default: false]"),
                 Entry.of("injectLootContainers", true,
                         "injectLootContainers: If false, the mod ceases attempts to modify loot tables based on predicates in Loot Container JSONs. [Side: SERVER | Default: true]"),
                 Entry.of("enableDiscoveryRecipes", true,
@@ -56,6 +62,13 @@ public class Config {
                         "recipeSheetXP: Recipe Sheets grant experience when consumed, giving them a use when they're random drops. [Side: SERVER | Default: true]"),
                 Entry.of("generateDataWarning", true,
                         "generateDataWarning: Creates a file called \"warning.txt\" inside the world/gw2/ folder. [Side: SERVER | Default: true]"),
+                Entry.of("enableOfficialTitles", true,
+                        "enableOfficialTitles: Retrieves title data from the GW2 API. You don't need an API key for this. [Side: SERVER | Default: true]"),
+                Entry.of("enableCustomTitles", true,
+                        "enableCustomTitles: Lets you define custom titles. [Side: SERVER | Default: true]"),
+                Entry.of("gw2ApiKey", "",
+                        "gw2ApiKey: You can paste a Guild Wars 2 API key in here to receive various benefits in this mod. Check the Github Wiki for required permissions.\n" +
+                                "#To validate the key in-game, run the /gw2_auth command. Although other people won't be able to do much with your API key, be careful when sharing your modpack or config folder. [Side: CLIENT]"),
                 Entry.of("enableREICompat", true,
                         "enableREICompat: Adds various bits and bobs to RoughlyEnoughItems to enhance your Recipe viewing experience. [Side: CLIENT | Default: true]")
         );
@@ -105,6 +118,8 @@ public class Config {
                         if (!"true".equalsIgnoreCase(s) && !"false".equalsIgnoreCase(s)) {
                             logEntryError(configurationFile, key, value, s, "a boolean");
                         } else setCfgValue(key, Boolean.parseBoolean(s));
+                    } else if (cls.equals(String.class)) {
+                        setCfgValue(key, s);
                     }
                 } else {
                     changed = true;
@@ -166,6 +181,10 @@ public class Config {
 
         public static Entry<Boolean> of(String key, boolean value, String comment) {
             return new Entry<>(key, value, comment, Boolean.class);
+        }
+
+        public static Entry<String> of(String key, String value, String comment) {
+            return new Entry<>(key, value, comment, String.class);
         }
     }
 }

@@ -26,6 +26,7 @@
     "bags.client.HandledScreenMixin",
     "bags.client.SlotAccessor",
     "client.BakedModelManagerMixin",
+    "client.ClientPlayerEntityMixin",
     "client.EntitySpawnSyncMixin",
     "client.ItemRendererAccessor",
     "compat.rei.DefaultCraftingCategoryMixin"

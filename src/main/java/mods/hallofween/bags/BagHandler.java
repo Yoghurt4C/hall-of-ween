@@ -70,6 +70,10 @@ public interface BagHandler {
         return arr;
     }
 
+    static int getInitialBagCount(boolean access) {
+        return access ? 5 : 3;
+    }
+
     static DefaultedList<ItemStack> getInitialInventory() {
         List<ItemStack> bags = new ArrayList<>();
         for (int i = 0; i < 10; i++) {
