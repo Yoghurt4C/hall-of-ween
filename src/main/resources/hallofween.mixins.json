@@ -24,7 +24,6 @@
     "bags.client.ClientPlayerEntityMixin",
     "bags.client.HandledScreenAccessor",
     "bags.client.HandledScreenMixin",
-    "bags.client.SlotAccessor",
     "client.BakedModelManagerMixin",
     "client.ClientPlayerEntityMixin",
     "client.EntitySpawnSyncMixin",

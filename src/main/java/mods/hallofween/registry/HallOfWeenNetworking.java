@@ -25,6 +25,8 @@ public class HallOfWeenNetworking {
         ServerPlayConnectionEvents.JOIN.register(S2CSheetSyncMessage::send);
         ServerLifecycleEvents.END_DATA_PACK_RELOAD.register(S2CSheetSyncMessage::send);
 
+        ServerPlayConnectionEvents.JOIN.register(ConfigSyncMessage::send);
+
         ServerPlayConnectionEvents.INIT.register((handler, server) -> {
             ServerPlayNetworking.registerReceiver(handler, PlayerDataSyncMessage.MESSAGEID, PlayerDataSyncMessage::receive);
             if (Config.enableBagInventory) {
@@ -51,6 +53,7 @@ public class HallOfWeenNetworking {
     public static void initClient() {
         ClientPlayNetworking.registerGlobalReceiver(S2CContainerSyncMessage.MESSAGEID, S2CContainerSyncMessage::receive);
         ClientPlayNetworking.registerGlobalReceiver(S2CSheetSyncMessage.MESSAGEID, S2CSheetSyncMessage::receive);
+        ClientPlayNetworking.registerGlobalReceiver(ConfigSyncMessage.MESSAGEID, ConfigSyncMessage::receive);
 
         ClientPlayConnectionEvents.INIT.register((handler, client) -> {
             ClientPlayNetworking.registerReceiver(PlayerDataSyncMessage.MESSAGEID, PlayerDataSyncMessage::receive);

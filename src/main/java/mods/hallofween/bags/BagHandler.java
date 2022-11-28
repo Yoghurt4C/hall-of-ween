@@ -4,6 +4,9 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonNull;
 import com.google.gson.JsonObject;
+import mods.hallofween.Config;
+import mods.hallofween.HallOfWeen;
+import mods.hallofween.data.PlayerDataManager;
 import mods.hallofween.mixin.bags.DefaultedListAccessor;
 import mods.hallofween.util.ItemStackSerializer;
 import net.minecraft.entity.player.PlayerEntity;
@@ -71,12 +74,12 @@ public interface BagHandler {
     }
 
     static int getInitialBagCount(boolean access) {
-        return access ? 5 : 3;
+        return access ? Math.max(5, Config.startingBagInventorySize) : Config.startingBagInventorySize;
     }
 
     static DefaultedList<ItemStack> getInitialInventory() {
         List<ItemStack> bags = new ArrayList<>();
-        for (int i = 0; i < 10; i++) {
+        for (int i = 0; i < Config.maxBagInventorySize; i++) {
             bags.add(ItemStack.EMPTY);
         }
         return DefaultedListAccessor.constructor(bags, ItemStack.EMPTY);

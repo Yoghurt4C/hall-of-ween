@@ -3,13 +3,14 @@ package mods.hallofween.client.bags;
 import me.shedaniel.cloth.api.client.events.v0.ClothClientHooks;
 import net.minecraft.client.gui.screen.ingame.HandledScreen;
 import net.minecraft.text.Text;
+import net.minecraft.text.TranslatableText;
 import net.minecraft.util.ActionResult;
 
 public interface BagInitializer {
     static void init() {
         ClothClientHooks.SCREEN_INIT_POST.register(((client, screen, screenHooks) -> {
             if (screen instanceof HandledScreen) {
-                BagData.WIDGET = new BagWidget(Text.of("fuckyou"), client, (HandledScreen<?>) screen);
+                BagData.WIDGET = new BagWidget(new TranslatableText("text.hallofween.inventoru"), client, (HandledScreen<?>) screen);
                 BagData.WIDGET.init(client, 218, 97);
                 screenHooks.cloth$getChildren().add(BagData.WIDGET);
             }

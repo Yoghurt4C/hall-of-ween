@@ -1,11 +1,14 @@
 package mods.hallofween.client.bags;
 
+import com.mojang.blaze3d.systems.RenderSystem;
 import me.shedaniel.clothconfig2.ClothConfigInitializer;
 import me.shedaniel.clothconfig2.api.ScissorsHandler;
 import me.shedaniel.clothconfig2.api.ScrollingContainer;
 import me.shedaniel.math.Rectangle;
+import mods.hallofween.Config;
 import mods.hallofween.bags.BagHandler;
 import mods.hallofween.bags.BagInventory;
+import mods.hallofween.data.PlayerDataManager;
 import mods.hallofween.mixin.bags.client.HandledScreenAccessor;
 import mods.hallofween.network.BagSlotChangeMessage;
 import net.minecraft.client.MinecraftClient;
@@ -46,22 +49,21 @@ public class BagWidget extends Screen {
 
     @Override
     public void init() {
-        int bagW = 218, bagH = 97,
+        int bagW = 116, bagH = 178,
                 bagX = this.x - bagW,
                 bagY = (this.client.getWindow().getScaledHeight() - bagH) / 2;
         this.bounds = new Rectangle(bagX, bagY, bagW, bagH);
-        //todo measure exact numbers after new texture
-        this.contBounds = new Rectangle(bagX + 27, bagY + 23, bagW - 30, bagH - 25);
+        this.contBounds = new Rectangle(bagX + 19, bagY + 19, 97, 148);
         this.rows = 4;
-        this.columns = 10;
+        this.columns = 5;
         this.slots = new ArrayList<>();
-        int row = 0, column = 0;
+        int row = 1, column = 0;
         if (client.player != null) {
             BagInventory bags = BagHandler.getBagHolder(client.player).getBagInventory();
-            for (int i = 0; i < 10; i++) {
-                slots.add(new BagSlot(this, bags, i, 18, 18, i, 0));
+            for (int i = 0; i < Config.maxBagInventorySize; i++) {
+                slots.add(new BagSlot(this, bags, i, 9, 9 , i, 0));
             }
-            for (int i = 10; i < bags.size(); i++) {
+            for (int i = Config.maxBagInventorySize; i < bags.size(); i++) {
                 slots.add(new BagSlot(this, bags, i, 18, 18, row, column));
                 column++;
                 if (column % this.columns == 0) {
@@ -70,7 +72,7 @@ public class BagWidget extends Screen {
                 }
             }
         }
-        this.scroll = new BagScrollingContainer(contBounds, row + 1);
+        this.scroll = new BagScrollingContainer(contBounds, row);
     }
 
     @Override
@@ -93,27 +95,33 @@ public class BagWidget extends Screen {
     }
 
     public void drawBackground(MatrixStack matrices, int mouseX, int mouseY) {
+        this.client.textRenderer.drawWithShadow(matrices, this.title, bounds.x + 24, bounds.y + 8, 0xFFFFFFFF);
         this.client.getTextureManager().bindTexture(GUI);
-        this.drawTexture(matrices, bounds.x, bounds.y, 0, 0, 256, 256);
+        RenderSystem.enableBlend();
+        drawTexture(matrices, bounds.x, bounds.y, 0, 0, 116, 178, 256, 256);
+        drawTexture(matrices, contBounds.x, contBounds.y, contBounds.getWidth(), contBounds.getHeight(), 145, 0, 111, 119, 256, 256);
+        int gY = bounds.y + 20 + (9 * PlayerDataManager.getUnlockedBagSlotCount(client.player));
+        fill(matrices, bounds.x + 10, bounds.y + 20, bounds.x + 20, gY, 0xFF000000);
+        fillGradient(matrices, bounds.x + 10, gY, bounds.x + 20, bounds.y + 169, 0xFF000000, 0x00000000);
+        RenderSystem.disableBlend();
     }
 
     public void drawForeground(MatrixStack matrices, int mouseX, int mouseY, float delta) {
-        int bX = bounds.x + 4, bY = bounds.y + 23, contX = contBounds.x, contY = contBounds.y;
-        for (int i = 0; i < 10; i++) {
+        int bX = bounds.x + 11, bY = bounds.y + 21, contX = contBounds.x + 2, contY = contBounds.y + 2;
+        for (int i = 0; i < PlayerDataManager.getUnlockedBagSlotCount(client.player); i++) {
             BagSlot slot = slots.get(i);
-            slot.updateInformation(bX, bY, true, true, true, 18);
+            slot.move(bX, bY);
             slot.render(matrices, mouseX, mouseY, delta);
-            bY += slot.getEntryHeight();
+            bY += slot.getEntryHeight() + 1;
         }
         ScissorsHandler.INSTANCE.scissor(scroll.getScissorBounds());
-        for (int i = 10; i < this.slots.size(); i++) {
+        for (int i = Config.maxBagInventorySize; i < this.slots.size(); i++) {
             BagSlot slot = slots.get(i);
-            //boolean containsMouse = cursor && mouseY >= currentY && mouseY < currentY + slot.getEntryHeight();
-            slot.updateInformation(contX, (int) (contY - scroll.scrollAmount), true, true, true, 18);
             boolean rendering = slot.y + slot.getEntryHeight() >= contBounds.y && slot.y <= contBounds.getMaxY();
+            slot.move(contX, (int) (contY - scroll.scrollAmount));
             contX += slot.getEntryWidth();
-            if (slot.column == 9) {
-                contX = bX + 23;
+            if (slot.column == this.columns - 1) {
+                contX = contBounds.x + 2;
                 contY += slot.getEntryHeight();
             }
             if (rendering) slot.render(matrices, mouseX, mouseY, delta);

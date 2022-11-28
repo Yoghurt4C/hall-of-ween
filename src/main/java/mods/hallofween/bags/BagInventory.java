@@ -2,6 +2,7 @@ package mods.hallofween.bags;
 
 import com.google.common.collect.ImmutableList;
 import com.google.gson.*;
+import mods.hallofween.Config;
 import mods.hallofween.client.bags.BagData;
 import mods.hallofween.item.BagItem;
 import mods.hallofween.network.BagSyncMessage;
@@ -59,13 +60,13 @@ public class BagInventory implements Inventory {
     }
 
     public int resolveSetStack(int slot, ItemStack stack, PlayerEntity player) {
-        if (slot < 10) return setBag(slot, stack, player);
+        if (slot < Config.maxBagInventorySize) return setBag(slot, stack, player);
         else setStack(slot, stack);
         return slot;
     }
 
     private int getBagContentsStart(int slot) {
-        int pointer = 10;
+        int pointer = Config.maxBagInventorySize;
         for (int i = 0; i < slot; i++) {
             ItemStack stack = contents.get(i);
             if (!stack.isEmpty() && stack.getItem() instanceof BagItem) {
@@ -97,13 +98,13 @@ public class BagInventory implements Inventory {
                 ItemScatterer.spawn(player.world, player.getX(), player.getY(), player.getZ(), stack);
         }
         this.contents.remove(slot);
-        this.contents.add(9, ItemStack.EMPTY);
+        this.contents.add(Config.maxBagInventorySize - 1, ItemStack.EMPTY);
         new BagSyncMessage(this.contents).send((ServerPlayerEntity) player);
     }
 
     //valid = not full
     public int getFirstValidBagSlot() {
-        for (int i = 0; i < 10; i++) {
+        for (int i = 0; i < Config.maxBagInventorySize; i++) {
             int start = getBagContentsStart(i);
             int end = getBagSize(i);
             if (!isBagFull(getBagViewInternal(start, end))) return i;
@@ -113,7 +114,7 @@ public class BagInventory implements Inventory {
 
     @Nullable
     public List<ItemStack> getFirstValidBagView() {
-        for (int i = 0; i < 10; i++) {
+        for (int i = 0; i < Config.maxBagInventorySize; i++) {
             int start = getBagContentsStart(i);
             int end = start + getBagSize(i);
             List<ItemStack> list = getBagViewInternal(start, end);
@@ -129,12 +130,12 @@ public class BagInventory implements Inventory {
     }
 
     public List<ItemStack> getBags() {
-        return getBagViewInternal(0, 10);
+        return getBagViewInternal(0, Config.maxBagInventorySize);
     }
 
     public ImmutableList<ItemStack> getNonEmptyBags() {
         ImmutableList.Builder<ItemStack> bags = ImmutableList.builder();
-        for (int i = 0; i < 10; i++) {
+        for (int i = 0; i < Config.maxBagInventorySize; i++) {
             ItemStack stack = contents.get(i);
             if (stack.isEmpty()) break;
             bags.add(stack);
@@ -226,20 +227,6 @@ public class BagInventory implements Inventory {
 
     @Override
     public void clear() {
-        contents.subList(10, contents.size()).clear();
-    }
-
-    public static class Serializer implements JsonSerializer<BagInventory> {
-        @Override public JsonElement serialize(BagInventory src, Type typeOfSrc, JsonSerializationContext context) {
-            Gson GSON = new GsonBuilder().create();
-            JsonObject json = new JsonObject();
-            JsonArray bags = new JsonArray();
-            for (ItemStack stack : src.getBagViewInternal(0, 10)) {
-                if (stack.isEmpty()) break;
-                JsonObject sObj = new JsonObject();
-                GSON.toJsonTree(stack.toTag(new CompoundTag()));
-            }
-            return json;
-        }
+        contents.subList(Config.maxBagInventorySize, contents.size()).clear();
     }
 }
