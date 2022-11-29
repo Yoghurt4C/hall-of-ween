@@ -1,7 +1,6 @@
 package mods.hallofween.bags;
 
 import com.google.common.collect.ImmutableList;
-import com.google.gson.*;
 import mods.hallofween.Config;
 import mods.hallofween.client.bags.BagData;
 import mods.hallofween.item.BagItem;
@@ -9,13 +8,11 @@ import mods.hallofween.network.BagSyncMessage;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.inventory.Inventory;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.CompoundTag;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.util.ItemScatterer;
 import net.minecraft.util.collection.DefaultedList;
 import org.jetbrains.annotations.Nullable;
 
-import java.lang.reflect.Type;
 import java.util.Collections;
 import java.util.List;
 
@@ -131,6 +128,10 @@ public class BagInventory implements Inventory {
 
     public List<ItemStack> getBags() {
         return getBagViewInternal(0, Config.maxBagInventorySize);
+    }
+
+    public List<ItemStack> getContents() {
+        return getBagViewInternal(Config.maxBagInventorySize, contents.size());
     }
 
     public ImmutableList<ItemStack> getNonEmptyBags() {

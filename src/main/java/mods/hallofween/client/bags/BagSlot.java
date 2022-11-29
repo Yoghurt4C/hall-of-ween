@@ -16,13 +16,12 @@ import java.util.List;
 
 public class BagSlot extends Widget {
     public static final Identifier BACKGROUND = HallOfWeenUtil.getId("textures/gui/slot.png");
-    public BagWidget parent;
     public BagInventory inv;
     public int slot, x, y, w, h;
     public byte row, column;
+    private boolean containsMouse;
 
-    public BagSlot(BagWidget parent, BagInventory inv, int slot, int width, int height, int row, int column) {
-        this.parent = parent;
+    public BagSlot(BagInventory inv, int slot, int width, int height, int row, int column) {
         this.inv = inv;
         this.slot = slot;
         this.w = width;
@@ -39,9 +38,10 @@ public class BagSlot extends Widget {
         return this.h;
     }
 
-    public void move(int xPos, int yPos) {
+    public void move(int xPos, int yPos, boolean containsMouse) {
         this.x = xPos;
         this.y = yPos;
+        this.containsMouse = containsMouse;
     }
 
     public ItemStack getStack() {
@@ -74,7 +74,7 @@ public class BagSlot extends Widget {
         this.minecraft.getItemRenderer().zOffset = 100.0F;
         RenderSystem.enableBlend();
         this.minecraft.getTextureManager().bindTexture(BACKGROUND);
-        drawTexture(matrices, x - 1, y - 1, this.getZOffset(),0,0, 18, 18, 18, 18);
+        drawTexture(matrices, x - 1, y - 1, this.getZOffset(), 0, 0, 18, 18, 18, 18);
         RenderSystem.disableBlend();
 
         RenderSystem.enableDepthTest();
@@ -84,8 +84,7 @@ public class BagSlot extends Widget {
         this.minecraft.getItemRenderer().zOffset = 0.0F;
         this.setZOffset(0);
 
-        if (slot >= Config.maxBagInventorySize && parent.scroll.getScissorBounds().contains(mouseX, mouseY) && this.containsMouse(mouseX, mouseY) || slot < Config.maxBagInventorySize && this.containsMouse(mouseX, mouseY)) {
-            this.parent.focusedSlot = this;
+        if (this.containsMouse) {
             RenderSystem.disableDepthTest();
             RenderSystem.colorMask(true, true, true, false);
             this.fillGradient(matrices, x, y, x + 16, y + 16, -2130706433, -2130706433);

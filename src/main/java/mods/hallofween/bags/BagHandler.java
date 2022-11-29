@@ -5,8 +5,6 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonNull;
 import com.google.gson.JsonObject;
 import mods.hallofween.Config;
-import mods.hallofween.HallOfWeen;
-import mods.hallofween.data.PlayerDataManager;
 import mods.hallofween.mixin.bags.DefaultedListAccessor;
 import mods.hallofween.util.ItemStackSerializer;
 import net.minecraft.entity.player.PlayerEntity;

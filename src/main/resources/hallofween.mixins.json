@@ -21,9 +21,10 @@
     "discovery.ShapelessRecipeMixin$ShapelessRecipeSerializerMixin"
   ],
   "client": [
-    "bags.client.ClientPlayerEntityMixin",
     "bags.client.HandledScreenAccessor",
     "bags.client.HandledScreenMixin",
+    "bags.client.InventoryScreenRecipeButtonMixin",
+    "bags.client.RecipeBookWidgetAccessor",
     "client.BakedModelManagerMixin",
     "client.ClientPlayerEntityMixin",
     "client.EntitySpawnSyncMixin",

@@ -75,19 +75,17 @@ public class BagSlotChangeMessage {
         byte type = buf.readByte();
         int slot = buf.readInt();
         ItemStack stack, cursor;
-        switch (type) {
-            case 1:
-                stack = buf.readItemStack();
-                holder.getBagInventory().resolveSetStack(slot, stack, client.player);
-                break;
-            case 2:
-                stack = buf.readItemStack();
-                cursor = buf.readItemStack();
-                holder.getBagInventory().resolveSetStack(slot, stack, client.player);
-                client.player.inventory.setCursorStack(cursor);
-                //BagData.WIDGET.children().get(slot).setStack(stack);
-                if (slot < 10) BagData.WIDGET.init();
-                break;
+        if (type == 2) {
+            stack = buf.readItemStack();
+            cursor = buf.readItemStack();
+            holder.getBagInventory().resolveSetStack(slot, stack, client.player);
+            client.player.inventory.setCursorStack(cursor);
+            if (slot < 10) {
+                BagData.WIDGET.updateContents();
+            } else if (stack.getItem() != cursor.getItem()) {
+                if (stack.isEmpty()) BagData.WIDGET.stackCount--;
+                else if (cursor.isEmpty()) BagData.WIDGET.stackCount++;
+            }
         }
     }
 
@@ -96,27 +94,13 @@ public class BagSlotChangeMessage {
         byte type = buf.readByte();
         int slot = buf.readInt();
         ItemStack stack, cursor;
-        switch (type) {
-            case 0:
-                stack = holder.getBagInventory().getStack(slot).copy();
-                cursor = player.inventory.getCursorStack().copy();
-                slot = holder.getBagInventory().resolveSetStack(slot, cursor, player);
-                player.inventory.setCursorStack(stack);
+        if (type == 0) {
+            stack = holder.getBagInventory().getStack(slot).copy();
+            cursor = player.inventory.getCursorStack().copy();
+            slot = holder.getBagInventory().resolveSetStack(slot, cursor, player);
+            player.inventory.setCursorStack(stack);
 
-                new BagSlotChangeMessage(slot, holder.getBagInventory().getStack(slot), player.inventory.getCursorStack()).send(player);
-                break;
-            case 1:
-                stack = buf.readItemStack();
-                slot = holder.getBagInventory().resolveSetStack(slot, stack, player);
-                break;
-            case 2:
-                stack = buf.readItemStack();
-                cursor = buf.readItemStack();
-                slot = holder.getBagInventory().resolveSetStack(slot, stack, player);
-                player.inventory.setCursorStack(cursor);
-
-                new BagSlotChangeMessage(slot, holder.getBagInventory().getStack(slot), player.inventory.getCursorStack()).send(player);
-                break;
+            new BagSlotChangeMessage(slot, holder.getBagInventory().getStack(slot), player.inventory.getCursorStack()).send(player);
         }
     }
 }
